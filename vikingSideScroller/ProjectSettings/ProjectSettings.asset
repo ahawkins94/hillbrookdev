@@ -4,7 +4,7 @@
 PlayerSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 14
-  productGUID: 89761d623791943439a3e49875efa6bb
+  productGUID: 3eb5b654ffd77e94a8aaaa910cc5dd2c
   AndroidProfiler: 0
   AndroidFilterTouchesWhenObscured: 0
   defaultScreenOrientation: 4
@@ -12,7 +12,7 @@ PlayerSettings:
   useOnDemandResources: 0
   accelerometerFrequency: 60
   companyName: DefaultCompany
-  productName: vikingSideScroller
+  productName: vikingsidescroller
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13725491, g: 0.12156863, b: 0.1254902, a: 1}
@@ -558,14 +558,14 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: vikingSideScroller
+  metroPackageName: vikingsidescroller
   metroPackageVersion: 
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
   metroCertificateIssuer: 
   metroCertificateNotAfter: 0000000000000000
-  metroApplicationDescription: vikingSideScroller
+  metroApplicationDescription: vikingsidescroller
   wsaImages: {}
   metroTileShortName: 
   metroCommandLineArgsFile: 
@@ -634,8 +634,8 @@ PlayerSettings:
     UNet: 1
   facebookSdkVersion: 7.9.4
   apiCompatibilityLevel: 2
-  cloudProjectId: 2681079e-b323-4d05-a4b1-09762e4dc05e
-  projectName: vikingSideScroller (1)
+  cloudProjectId: a39895cd-b7c6-4661-a989-daf7e1703fd0
+  projectName: vikingsidescroller
   organizationId: 00f9708-b890-4610-90fb-e1cd9616d636
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
