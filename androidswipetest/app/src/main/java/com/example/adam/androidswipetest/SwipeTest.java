@@ -12,9 +12,14 @@ import static java.lang.Math.abs;
 
 public class SwipeTest extends AppCompatActivity {
 
+    //class constants
     private static int counter = 0;
     private static long startTime;
 
+    /**
+     * Class to store point data, lower memory than MotionEvent class.
+     * Potentially add Gradiant and Time to each point
+     */
     public class Point {
         private int x;
         private int y;
@@ -45,16 +50,19 @@ public class SwipeTest extends AppCompatActivity {
         }
     }
 
+    //point variables
     private Point point;
     private Point pointOrigin;
     private Point lastPoint;
     private LinkedList<Point> pointHistory = new LinkedList<>();
 
+    //gradient variables
     private float gradient;
     private LinkedList<Float> gradientHistory = new LinkedList<>();
     private int grandientHistorySize = 5;
     private float movingAverageGradient;
 
+    //method to start android emulator
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,50 +71,75 @@ public class SwipeTest extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        Point testCurrent = new Point(900, 2);
-        Point testLast = new Point(500, 1);
-        Log.d("TestGradient", String.valueOf(calculatedGradient(testCurrent, testLast)));
+        //Ease of reading events
         counter++;
         Log.d("EVENT", "-------- " + counter + " --------");
-        Log.d("Attributes", writeAttributes(event));
+        Log.d("Attributes", writeEventAttributes(event));
+
+        //Set lastpoint - null pointer exception without check
         if (!pointHistory.isEmpty()) {
             lastPoint = pointHistory.getLast();
         }
 
+        //Set current point
         int x = (int) event.getX();
         int y = (int) event.getY();
         point = new Point(x, y);
+
+        //getAction() produces the type of event, currently only handling DOWN, MOVE, UP with 0, 1, 2 respectively
         int action = event.getAction();
+
+        //reset gradient to sum again
         float sumGradient = 0;
 
-
+        /** action start
+         * sets origin
+         * reset pointHistory as it is a new swipe
+         * adds to history as first entity
+         */
         if (action == MotionEvent.ACTION_DOWN) {
             Log.d("State", "Begin");
             pointOrigin = point;
             pointHistory = new LinkedList<Point>();
             pointHistory.add(point);
         }
+
+        /** action move
+         * adds to history
+         */
         if (action == MotionEvent.ACTION_MOVE) {
             Log.d("State", "Move");
             pointHistory.add(point);
         }
+
+        /** action up
+         * resets counter
+         * adds to history
+         */
         if (action == MotionEvent.ACTION_UP) {
             Log.d("State", "End");
             pointHistory.add(point);
             counter = 0;
         }
-        Log.d("History", showHistory(pointHistory));
+        Log.d("History", writePointHistory(pointHistory));
+
+        //calculating gradient
+        //cannot calculate if it is the first action
         if (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_UP) {
+            //call calculatedGradient method
             gradient = calculatedGradient(point, lastPoint);
             if (!gradientHistory.isEmpty()) {
+                //calculates movingAverageGradient
                 for (int i = 0; i < gradientHistory.size(); i++) {
                     sumGradient = sumGradient + gradientHistory.get(i);
                     movingAverageGradient = sumGradient / gradientHistory.size();
                 }
-                if (gradientHistory.size() > grandientHistorySize) {
+                //if current size is equal to the size we set then remove last and add new
+                if (gradientHistory.size() >= grandientHistorySize) {
                     gradientHistory.removeLast();
                 }
             }
+            //else just add normally
             gradientHistory.add(gradient);
         }
         Log.d("Average Gradient", String.valueOf(movingAverageGradient));
@@ -130,7 +163,7 @@ public class SwipeTest extends AppCompatActivity {
         return new Point(current.x - origin.x, current.y - origin.x);
     }
 
-    public String showHistory(List<Point> points) {
+    public String writePointHistory(List<Point> points) {
         StringBuilder sb = new StringBuilder();
         for(int i = 0; i < points.size(); i++) {
             if(i == 0) {
@@ -144,7 +177,7 @@ public class SwipeTest extends AppCompatActivity {
         return sb.toString();
     }
 
-    public String writeAttributes(MotionEvent event) {
+    public String writeEventAttributes(MotionEvent event) {
         StringBuilder sb = new StringBuilder();
         if(counter == 1) {
             startTime = event.getEventTime();
