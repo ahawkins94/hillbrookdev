@@ -9,10 +9,10 @@ public class Movement : MonoBehaviour
     // default speed and jump speed
     public LayerMask playerMask;
     // allows the tag_ground feature to work correctly throughout play
+    public bool canMoveInAir = true;
     Transform myTrans, tagGround;
     Rigidbody2D myBody;
-    
-    public bool isGrounded = false; 
+    bool isGrounded = false; 
     // prevents endless jumping
 
     void Start ()
@@ -36,6 +36,9 @@ public class Movement : MonoBehaviour
     
     public void Move(float horizontalInput)
     {
+        if(!canMoveInAir && !isGrounded)
+            return;
+
         Vector2 moveVel = myBody.velocity;
         moveVel.x = horizontalInput * speed;
         myBody.velocity =  moveVel;
