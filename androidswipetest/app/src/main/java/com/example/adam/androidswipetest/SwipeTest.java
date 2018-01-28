@@ -119,7 +119,14 @@ public class SwipeTest extends AppCompatActivity {
         if (action == MotionEvent.ACTION_UP) {
             Log.d("State", "End");
             pointHistory.add(point);
+            Point deltaPoint = calculateDelta(point, pointOrigin);
+            gradient = calculatedGradient(deltaPoint);
+            Log.d("Input", String.valueOf(gradient));
             counter = 0;
+            double angle = Math.toDegrees(Math.atan(gradient));
+            Log.d("Angle", String.valueOf(angle));
+            
+            return true;
         }
         Log.d("History", writePointHistory(pointHistory));
 
@@ -127,7 +134,7 @@ public class SwipeTest extends AppCompatActivity {
         //cannot calculate if it is the first action
         if (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_UP) {
             //call calculatedGradient method
-            gradient = calculatedGradient(point, lastPoint);
+            gradient = calculatedGradient(calculateDelta(point, lastPoint));
             if (!gradientHistory.isEmpty()) {
                 //calculates movingAverageGradient
                 for (int i = 0; i < gradientHistory.size(); i++) {
@@ -147,16 +154,18 @@ public class SwipeTest extends AppCompatActivity {
         return true;
     }
 
-    public float calculatedGradient(Point current, Point last) {
-        float deltaX = current.x - last.x;
-        float deltaY = current.y - last.y;
-        if(deltaX != 0){
-            float gradient = deltaY/ deltaX;
+    public float calculatedGradient(Point deltaPoint) {
+        if(deltaPoint.getX() != 0){
+            float gradient = deltaPoint.getY()/deltaPoint.getX();
             return gradient;
         }
         else {
             return 0;
         }
+    }
+
+    public Point calculateDelta(Point current, Point last) {
+        return new Point(current.getX() - last.getX(), current.getY() - last.getY());
     }
 
     public Point createRelativePoint(Point origin, Point current) {
