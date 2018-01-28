@@ -7,6 +7,8 @@ public class Movement : MonoBehaviour
 
     public float speed = 10, jumpVelocity = 10;
     // default speed and jump speed
+    public LayerMask playerMask;
+    // allows the tag_ground feature to work correctly throughout play
     Transform myTrans, tagGround;
     Rigidbody2D myBody;
     
@@ -23,7 +25,7 @@ public class Movement : MonoBehaviour
     
     void FixedUpdate()
     {
-        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position);  
+        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);  
 
        Move(Input.GetAxisRaw("Horizontal"));
     //used to check for horiztonal movement and allows for key input to move
