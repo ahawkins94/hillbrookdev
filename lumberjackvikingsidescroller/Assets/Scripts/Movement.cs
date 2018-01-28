@@ -5,18 +5,41 @@ using UnityEngine;
 public class Movement : MonoBehaviour
 {
 
-    public float ballSpeed;
+    public float speed = 10, jumpVelocity = 10;
+    // default speed and jump speed
+    Transform myTrans;
+    Rigidbody2D myBody;
+    
+    bool isGround = false; 
+    // stops endless jumping
 
-    /* Update is called every frame inputs/moving objects*/
-    void Update()
+    void Start ()
+    // loaded when the script starts
     {
-        float xSpeed = Input.GetAxis("Horizontal");
-        float ySpeed = Input.GetAxis("Vertical");
-
-        Rigidbody body = GetComponent<Rigidbody>();
-        body.AddTorque(new Vector3(xSpeed, 0, ySpeed) * ballSpeed * Time.deltaTime);
-
-
+        myBody = this.GetComponent<Rigidbody2D>();
+        myTrans = this.transform;
+    }
+    
+    void FixedUpdate()
+    // will update on a fixed timer
+    {
+       Move(Input.GetAxisRaw("Horizontal"));
+    //retrieves this axis on a fixed timer
+       if(Input.GetButtonDown("Jump"))
+           Jump();
+    //JUMP
+    }
+    
+    public void Move(float horizontalInput)
+    {
+        Vector2 moveVel = myBody.velocity;
+        moveVel.x = horizontalInput * speed;
+        myBody.velocity =  moveVel;
+    
     }
 
+    public void Jump()
+    {
+        myBody.velocity += jumpVelocity * Vector2.up;
+    }
 }
