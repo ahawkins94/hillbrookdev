@@ -7,27 +7,31 @@ public class Movement : MonoBehaviour
 
     public float speed = 10, jumpVelocity = 10;
     // default speed and jump speed
-    Transform myTrans;
+    public LayerMask playerMask;
+    // allows the tag_ground feature to work correctly throughout play
+    Transform myTrans, tagGround;
     Rigidbody2D myBody;
     
-    bool isGround = false; 
-    // stops endless jumping
+    public bool isGrounded = false; 
+    // prevents endless jumping
 
     void Start ()
-    // loaded when the script starts
     {
         myBody = this.GetComponent<Rigidbody2D>();
         myTrans = this.transform;
+        tagGround = GameObject.Find(this.name + "/tag_ground").transform;   
+        //will look for position of ground tag to see if jump is possible from start which is parented by "this"
     }
     
     void FixedUpdate()
-    // will update on a fixed timer
     {
+        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);  
+
        Move(Input.GetAxisRaw("Horizontal"));
-    //retrieves this axis on a fixed timer
+    //used to check for horiztonal movement and allows for key input to move
        if(Input.GetButtonDown("Jump"))
            Jump();
-    //JUMP
+    //used for key input to jump
     }
     
     public void Move(float horizontalInput)
@@ -35,11 +39,15 @@ public class Movement : MonoBehaviour
         Vector2 moveVel = myBody.velocity;
         moveVel.x = horizontalInput * speed;
         myBody.velocity =  moveVel;
+        //horizontonal movement speeds
     
     }
 
     public void Jump()
     {
+        if(isGrounded) 
+        //check to see if player is on ground to prevent continous jumping
         myBody.velocity += jumpVelocity * Vector2.up;
+        //calculates the power of the jump
     }
 }
