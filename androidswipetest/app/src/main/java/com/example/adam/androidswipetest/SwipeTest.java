@@ -2,15 +2,17 @@ package com.example.adam.androidswipetest;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
+
+import java.util.Map;
 
 public class SwipeTest extends AppCompatActivity {
 
-    private Map<float, float> current;
-    private (Map<float, float>)[]
-
+    private Map<Integer, Integer> point;
 
     private double gradient;
-    private double[] gradient history;
+    private double[] gradientHistory;
 
 
     @Override
@@ -20,7 +22,7 @@ public class SwipeTest extends AppCompatActivity {
     }
 
     @Override
-    public boolean onTouchEvent(MotionEvent even) {
+    public boolean onTouchEvent(MotionEvent event) {
         int x = (int)event.getX();
         int y = (int)event.getY();
         switch (event.getAction()) {
@@ -32,6 +34,7 @@ public class SwipeTest extends AppCompatActivity {
 
             case MotionEvent.ACTION_UP: Log.d("UP", "UP");
         }
+        return true;
     }
 
 }
