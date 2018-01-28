@@ -5,6 +5,9 @@ using UnityEngine;
 public class Movement : MonoBehaviour {
 
     public float gravityModifier = 1f;
+    public float maxSpeed = 7;
+    public float jumpTakeOffSpeed = 7;
+
 
     protected Vector2 targetVelocity;
     protected bool grounded;
@@ -26,10 +29,6 @@ public class Movement : MonoBehaviour {
         ComputeVelocity();
     }
 
-    protected virtual void ComputeVelocity()
-    {
-
-    }
 
 // Update is called once per frame
     void FixedUpdate() {
@@ -44,14 +43,14 @@ public class Movement : MonoBehaviour {
 
         Vector2 move = moveAlongGround * deltaPosition.x;
 
-        Movement(move, false);
+        //Movement(move, false);
 
         move = Vector2.up * deltaPosition.y;
 
-        Movement(move, true);
+        //Movement(move, true);
     }
 
-    protected override void ComputeVelocity()
+    protected void ComputeVelocity()
     {
         Vector2 move = Vector2.zero;
 
@@ -69,26 +68,10 @@ public class Movement : MonoBehaviour {
             }
         }
 
-        bool flipSprite = (spriteRenderer.flipX ? (move.x > 0.01f) : (move.x < 0.01f));
-        if (flipSprite)
-        {
-            spriteRenderer.flipX = !spriteRenderer.flipX;
-        }
-
-        animator.SetBool("grounded", grounded);
-        animator.SetFloat("velocityX", Mathf.Abs(velocity.x) / maxSpeed);
-
         targetVelocity = move * maxSpeed;
     }
 
 
-    void Movement(Vector2 move, bool yMovement)
-    {
-        float distance = move.magnitude;
-
-        if (distance > minMoveDistance)
-        {
-
-        }
+//
 
 }
