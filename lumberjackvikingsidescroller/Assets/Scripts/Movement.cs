@@ -22,15 +22,19 @@ public class Movement : MonoBehaviour
         tagGround = GameObject.Find(this.name + "/tag_ground").transform;   
         //will look for position of ground tag to see if jump is possible from start which is parented by "this"
     }
-    
+
     void FixedUpdate()
     {
-        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);  
+        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);
 
-       Move(Input.GetAxisRaw("Horizontal"));
-    //used to check for horiztonal movement and allows for key input to move
-       if(Input.GetButtonDown("Jump"))
-           Jump();
+        Move(Input.GetAxisRaw("Horizontal"));
+
+        //used to check for horiztonal movement and allows for key input to move
+        if (Input.GetButtonDown("Jump"))
+        {
+            Jump();
+        }
+    
         //used for key input to jump
         if (Input.GetKey(key: KeyCode.Escape))
         {

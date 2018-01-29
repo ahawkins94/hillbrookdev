@@ -39,14 +39,9 @@ public class MainMenu : MonoBehaviour {
         {
             LoadPlayerUnityController();
         }
-        if (Input.GetKey(KeyCode.Escape))
-        {
-            Debug.Log("Escape");
-            GoLoadScene("Main");
-        }
     }
 
-    public void GoLoadScene(string sceneName)
+    public static void GoLoadScene(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
