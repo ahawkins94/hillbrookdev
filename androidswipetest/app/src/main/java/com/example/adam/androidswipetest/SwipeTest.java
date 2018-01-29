@@ -14,7 +14,15 @@ public class SwipeTest extends AppCompatActivity {
 
     //class constants
     private static int counter = 0;
+    private static int incrementalCounter = 0;
+    private static long incrementalTime = 100;
+
+    private static boolean changeDirection = false;
+
     private static long startTime;
+    private static long currentTime;
+
+    private final static double pi = 3.14;
 
     /**
      * Class to store point data, lower memory than MotionEvent class.
@@ -52,15 +60,22 @@ public class SwipeTest extends AppCompatActivity {
 
     //point variables
     private Point point;
-    private Point pointOrigin;
+    private Point pointOrigin = null;
     private Point lastPoint;
     private LinkedList<Point> pointHistory = new LinkedList<>();
+    double angle;
+    double deltaAngle;
+
+    Point changePoint;
+    Point deltaPoint;
 
     //gradient variables
     private float gradient;
     private LinkedList<Float> gradientHistory = new LinkedList<>();
     private int grandientHistorySize = 5;
     private float movingAverageGradient;
+
+    private double lastAngle;
 
     //method to start android emulator
     @Override
@@ -71,88 +86,122 @@ public class SwipeTest extends AppCompatActivity {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+
         //Ease of reading events
         counter++;
-        Log.d("EVENT", "-------- " + counter + " --------");
-        Log.d("Attributes", writeEventAttributes(event));
-
-        //Set lastpoint - null pointer exception without check
-        if (!pointHistory.isEmpty()) {
-            lastPoint = pointHistory.getLast();
+        if(counter == 1) {
+            startTime = event.getEventTime();
         }
+        currentTime = event.getEventTime() - startTime;
+        swipeControls(event);
+        return true;
+    }
 
-        //Set current point
+    /**
+     *
+     */
+    public void swipeControls(MotionEvent event) {
+
         int x = (int) event.getX();
         int y = (int) event.getY();
-        point = new Point(x, y);
-
-        //getAction() produces the type of event, currently only handling DOWN, MOVE, UP with 0, 1, 2 respectively
+        point = new Point(x,y);
         int action = event.getAction();
+        if(counter > 1){
+            if(currentTime > incrementalCounter * incrementalTime) {
+                deltaPoint = calculateDelta(point, lastPoint);
+                angle = Math.atan2(deltaPoint.getX(), deltaPoint.getY()) + pi;
 
-        //reset gradient to sum again
-        float sumGradient = 0;
+                lastPoint = point;
+                if(incrementalCounter > 1) {
+                    deltaAngle = abs(angle - lastAngle);
+                    if(deltaAngle > pi/4 && !changeDirection) {
+                        deltaPoint = calculateDelta(point, pointOrigin);
+                        angle = Math.atan2(deltaPoint.getX(), deltaPoint.getY()) + pi;
+                        changeDirection = true;
+                        changePoint = point;
+                        String input = calculateInput(angle);
+                        Log.d("EVENT CHANGE", "-------- " + counter + " --------");
+                        Log.d("Input", input);
 
-        /** action start
-         * sets origin
-         * reset pointHistory as it is a new swipe
-         * adds to history as first entity
-         */
+                    }
+                }
+                lastAngle = angle;
+                incrementalCounter++;
+
+            }
+        }
+
         if (action == MotionEvent.ACTION_DOWN) {
-            Log.d("State", "Begin");
             pointOrigin = point;
-            pointHistory = new LinkedList<Point>();
-            pointHistory.add(point);
+            lastPoint = point;
+            incrementalCounter = counter;
         }
 
         /** action move
          * adds to history
          */
         if (action == MotionEvent.ACTION_MOVE) {
-            Log.d("State", "Move");
-            pointHistory.add(point);
+
         }
 
-        /** action up
-         * resets counter
-         * adds to history
-         */
         if (action == MotionEvent.ACTION_UP) {
-            Log.d("State", "End");
-            pointHistory.add(point);
-            Point deltaPoint = calculateDelta(point, pointOrigin);
-            gradient = calculatedGradient(deltaPoint);
-            Log.d("Input", String.valueOf(gradient));
-            counter = 0;
-            double angle = Math.toDegrees(Math.atan(gradient));
-            Log.d("Angle", String.valueOf(angle));
-            
-            return true;
-        }
-        Log.d("History", writePointHistory(pointHistory));
-
-        //calculating gradient
-        //cannot calculate if it is the first action
-        if (action == MotionEvent.ACTION_MOVE || action == MotionEvent.ACTION_UP) {
-            //call calculatedGradient method
-            gradient = calculatedGradient(calculateDelta(point, lastPoint));
-            if (!gradientHistory.isEmpty()) {
-                //calculates movingAverageGradient
-                for (int i = 0; i < gradientHistory.size(); i++) {
-                    sumGradient = sumGradient + gradientHistory.get(i);
-                    movingAverageGradient = sumGradient / gradientHistory.size();
-                }
-                //if current size is equal to the size we set then remove last and add new
-                if (gradientHistory.size() >= grandientHistorySize) {
-                    gradientHistory.removeLast();
-                }
+            Log.d("EVENT FINAL", "-------- " + counter + " --------");
+            if(changeDirection) {
+                deltaPoint = calculateDelta(point, changePoint);
             }
-            //else just add normally
-            gradientHistory.add(gradient);
+            else {
+                deltaPoint = calculateDelta(point, pointOrigin);
+            }
+            changeDirection = false;
+            angle = Math.atan2(deltaPoint.x, deltaPoint.y) + pi;
+            counter = 0;
+            String input = calculateInput(angle);
+            Log.d("Input", input);
         }
-        Log.d("Average Gradient", String.valueOf(movingAverageGradient));
-        Log.d("Gradient", String.valueOf(gradient));
-        return true;
     }
+
+    public String calculateInputComplex(double angle) {
+        if(angle < pi/6 || angle > 11*pi/6) {
+            return "Up";
+        }
+        if(angle > pi/6 && angle < pi/3) {
+            return "Up-Left";
+        }
+        if(angle > pi/3 && angle < 2*pi/3) {
+            return "Left";
+        }
+        if(angle > 2*pi/3 && angle < 5*pi/6) {
+            return "Down-Left";
+        }
+        if(angle > 5*pi/6 && angle < 7*pi/6) {
+            return "Down";
+        }
+        if(angle > 7*pi/6 && angle < 4*pi/3) {
+            return "Down-Right";
+        }
+        if(angle > 4*pi/3 && angle < 5*pi/3) {
+            return "Right";
+        }
+        else {
+            return "Up-Right";
+        }
+    }
+
+    public String calculateInput(double angle) {
+        if(angle < pi/4 || angle > 7*pi/4) {
+            return "Up";
+        }
+        if(angle > pi/4 && angle < 3*pi/4) {
+            return "Left";
+        }
+        if(angle > 3*pi/4 && angle < 5*pi/4) {
+            return "Down";
+        }
+        else {
+            return "Right";
+        }
+    }
+
 
     public float calculatedGradient(Point deltaPoint) {
         if(deltaPoint.getX() != 0){
@@ -188,10 +237,6 @@ public class SwipeTest extends AppCompatActivity {
 
     public String writeEventAttributes(MotionEvent event) {
         StringBuilder sb = new StringBuilder();
-        if(counter == 1) {
-            startTime = event.getEventTime();
-        }
-        long currentTime = event.getEventTime() - startTime;
         sb.append("Time: ");
         sb.append(currentTime);
         sb.append(", Point: ");
