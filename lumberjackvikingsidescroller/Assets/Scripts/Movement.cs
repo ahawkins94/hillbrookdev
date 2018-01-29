@@ -31,7 +31,13 @@ public class Movement : MonoBehaviour
     //used to check for horiztonal movement and allows for key input to move
        if(Input.GetButtonDown("Jump"))
            Jump();
-    //used for key input to jump
+        //used for key input to jump
+        if (Input.GetKey(key: KeyCode.Escape))
+        {
+            Debug.Log("Escape");
+            MainMenu.GoLoadScene("Main");
+        }
+
     }
     
     public void Move(float horizontalInput)
