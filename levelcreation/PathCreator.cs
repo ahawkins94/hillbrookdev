@@ -6,41 +6,44 @@ using System.Linq;
 [System.Serializable]
 public class PathCreator : MonoBehaviour {
 
-    public sceneCharateristics currentPrefabI;
+    public LevelBlock currentPrefabI;
     public string currentSceneType;
     public int currentMinEnd;
     public int currentMaxEnd;
     public string currentsceneName;
-    public sceneCharateristics compPrefabI;
+    public LevelBlock compPrefabI;
     public string compSceneType;
     public int compMinStart;
     public int compMaxStart;
     public string compsceneName;
     private List<GameObject> currentCanPath;
     public List<GameObject> levels;
-    private sceneCharateristics prefab1Path;
+    private LevelBlock prefab1Path;
     private List<GameObject> prefab1Canpath;
-    private sceneCharateristics prefab2Path;
+    private LevelBlock prefab2Path;
     private string prefab2Canpath;
-    private sceneCharateristics prefabInCanPath;
+    private LevelBlock prefabInCanPath;
     private string prefabInCanPathName;
 	public string[] landscapePath = {"Landscape", "MovingPlatforms"};
 	public string[] platformsPath = {"Landscape", "Air", "MovingPlatforms"};
 	public string[] airPath = {"Air", "MovingPlatforms", "Landscape"};
 
+    //On awake load all the game objects for the prefeb folders. 
+    //Before the game starts it maps out the path of the level
     void Awake() {
         foreach (GameObject go in Resources.LoadAll<GameObject>("Prefabs")) {
             levels.Add(go);
         }
 
+        //This is loops for each block to create a level of ten blocks
         for (int i = 0; i < levels.Count; i++) {
 
-            currentPrefabI = levels[i].GetComponent<sceneCharateristics>();
+            currentPrefabI = levels[i].GetComponent<LevelBlock>();
 			var currentPrefabDetails = new ArrayList() {currentPrefabI.sceneType, currentPrefabI.minEnd, currentPrefabI.maxEnd, currentPrefabI.name};
 
             for (int x = 0; x < levels.Count; x++) {
 
-                compPrefabI = levels[x].GetComponent<sceneCharateristics>();
+                compPrefabI = levels[x].GetComponent<LevelBlock>();
 				var compPrefabDetails = new ArrayList() {compPrefabI.sceneType, compPrefabI.minEnd, compPrefabI.maxEnd, compPrefabI.name};
 
 				if (SettingPath((string)currentPrefabDetails[0], (string)compPrefabDetails[0], (int)currentPrefabDetails[1], (int)currentPrefabDetails[2], (int)compPrefabDetails[1], (int)compPrefabDetails[2]) 
@@ -137,14 +140,14 @@ public class PathCreator : MonoBehaviour {
 
     public bool NotDuplicated(GameObject prefab1, GameObject prefab2) {
       
-        prefab1Path = prefab1.GetComponent<sceneCharateristics>();
+        prefab1Path = prefab1.GetComponent<LevelBlock>();
         prefab1Canpath = prefab1Path.canPath;
 
-        prefab2Path = prefab2.GetComponent<sceneCharateristics>();
+        prefab2Path = prefab2.GetComponent<LevelBlock>();
         prefab2Canpath = prefab2Path.sceneName;
 		
 		for (int i = 0; i < prefab1Canpath.Count; i++) {
-        	prefabInCanPath = prefab1Canpath[i].GetComponent<sceneCharateristics>();
+        	prefabInCanPath = prefab1Canpath[i].GetComponent<LevelBlock>();
             prefabInCanPathName = prefabInCanPath.sceneName;
 
             if (prefabInCanPathName == prefab2Canpath) {

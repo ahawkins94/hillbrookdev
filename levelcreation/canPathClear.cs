@@ -2,10 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class canPathClear : MonoBehaviour {
+public class CanPathClear : MonoBehaviour {
 
 	public List<GameObject> listLevels = new List<GameObject>();
-	public sceneCharateristics prefabI;
+	public LevelBlock prefabI;
 	
 	void Start () {
 
@@ -14,7 +14,7 @@ public class canPathClear : MonoBehaviour {
 		}
 
 		for (int i = 0; i < listLevels.Count; i++) {
-			prefabI = listLevels [i].GetComponent<sceneCharateristics> ();
+			prefabI = listLevels [i].GetComponent<LevelBlock> ();
 			prefabI.canPath.Clear ();
 	
 		}
