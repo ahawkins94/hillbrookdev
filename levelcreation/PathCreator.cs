@@ -43,7 +43,9 @@ public class PathCreator : MonoBehaviour {
                 compPrefabI = levels[x].GetComponent<sceneCharateristics>();
 				var compPrefabDetails = new ArrayList() {compPrefabI.sceneType, compPrefabI.minEnd, compPrefabI.maxEnd, compPrefabI.name};
 
-				if (settingTest((string)currentPrefabDetails[0], (string)compPrefabDetails[0], (int)currentPrefabDetails[1], (int)currentPrefabDetails[2], (int)compPrefabDetails[1], (int)compPrefabDetails[2]) && notDuplicated(levels[i], levels[x]) && ((string)currentPrefabDetails[3] != (string)compPrefabDetails[3])) {
+				if (SettingPath((string)currentPrefabDetails[0], (string)compPrefabDetails[0], (int)currentPrefabDetails[1], (int)currentPrefabDetails[2], (int)compPrefabDetails[1], (int)compPrefabDetails[2]) 
+                    && NotDuplicated(levels[i], levels[x]) 
+                    && ((string)currentPrefabDetails[3] != (string)compPrefabDetails[3])) {
 				
                     currentCanPath = currentPrefabI.canPath;
                     currentCanPath.Add(levels[x]);
@@ -53,72 +55,87 @@ public class PathCreator : MonoBehaviour {
 			currentPrefabDetails.Clear();
         }
     }
-	
-	
-	public bool settingTest(string currentSceneType, string compSceneType, int minEnd, int maxEnd, int minStart, int maxStart) {
-		switch(currentSceneType) {
-			case "Landscape":
-				// maxEnd and minEnd are the same since currentSceneType is Landscape
-				int landscapeEnd = maxEnd;
-				
-				switch(compSceneType) {
-					case "Landscape":
-						// maxStart and minStart are the same since compSceneType is Landscape
-						int landscapeStart = maxStart;
-						
-						if(landscapeEnd == landscapeStart ) { 
-							return true;
-						}
-						else {
-							return false;
-						}
-					case "MovingPlatforms":
-						if((Math.Abs(maxStart-landscapeEnd) <= 2) || (landscapeEnd+2 <= minStart) || (minStart <= landscapeEnd)) { 
-							return true;
-						}
-						else {
-							return false;
-						}
-					case "Air":
-						return false;
-				}
-			case "MovingPlatforms":
-				switch(compSceneType) {
-					case "Landscape":
-						if (maxEnd >= maxStart) { 
-							return true;
-						}
-						else {
-							return false;
-						}
-					case "MovingPlatforms":
-						if ((Math.Abs(maxStart-maxEnd) <= 2) || (Math.Abs(minStart-minEnd) <= 2)) { 
-							return true;
-						}
-						else {
-							return false;
-						}
-					case "Air":
-						if () { 
-							return true;
-						}
-						else {
-							return false;
-						}
-				}
-			case "Air":
-				switch(compSceneType) {
-					case "Landscape":
-					case "MovingPlatforms":
-					case "Air":
-				}
-			default:
-				return false;
-				break;
-		}
-	}
 
-    public bool notDuplicated(GameObject prefab1, GameObject prefab2) {
+    public bool SettingPath(string currentSceneType, string compSceneType, int minEnd, int maxEnd, int minStart, int maxStart)
+    {
+        if(currentSceneType.Equals("Landscape"))
+        {
+            int landscapeEnd = maxEnd;
+            if(compSceneType.Equals("Landscape"))
+            {
+                int landscapeStart = maxStart;
+                if(landscapeEnd == landscapeStart)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+	
+	
+	//public bool settingTest(string currentSceneType, string compSceneType, int minEnd, int maxEnd, int minStart, int maxStart) {
+	//	switch(currentSceneType) {
+ //           case "Landscape":
+				
+						
+ //               // maxEnd and minEnd are the same since currentSceneType is Landscape
+	//			int landscapeEnd = maxEnd;
+	//			switch(compSceneType) {
+	//				case "Landscape":
+	//					// maxStart and minStart are the same since compSceneType is Landscape
+	//					int landscapeStart = maxStart;			
+	//					if(landscapeEnd == landscapeStart ) { 
+	//						return true;
+	//					}
+	//					else {
+	//						return false;
+	//					}
+	//				case "MovingPlatforms":
+	//					if((Mathf.Abs(maxStart-landscapeEnd) <= 2) || (landscapeEnd+2 <= minStart) || (minStart <= landscapeEnd)) { 
+	//						return true;
+	//					}
+	//					else {
+	//						return false;
+	//					}
+	//				case "Air":
+	//					return false;
+	//			}
+	//		case "MovingPlatforms":
+	//			switch(compSceneType) {
+	//				case "Landscape":
+	//					if (maxEnd >= maxStart) { 
+	//						return true;
+	//					}
+	//					else {
+	//						return false;
+	//					}
+	//				case "MovingPlatforms":                 
+	//					if ((Mathf.Abs(maxStart-maxEnd) <= 2) || (Mathf.Abs(minStart-minEnd) <= 2)) { 
+	//						return true;
+	//					}
+	//					else {
+	//						return false;
+	//					}
+	//				case "Air":
+	//					if (true) { 
+	//						return true;
+	//					}
+	//					else {
+	//						return false;
+	//					}
+	//			}
+	//		case "Air":
+	//			switch(compSceneType) {
+	//				case "Landscape":
+ //                       return true;
+	//			}
+	//		default:
+	//			return false;
+	//	}
+	//}
+
+    public bool NotDuplicated(GameObject prefab1, GameObject prefab2) {
       
         prefab1Path = prefab1.GetComponent<sceneCharateristics>();
         prefab1Canpath = prefab1Path.canPath;
