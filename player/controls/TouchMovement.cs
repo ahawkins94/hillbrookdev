@@ -10,9 +10,9 @@ public class TouchMovement : MonoBehaviour
     public LayerMask playerMask;
     // allows the tag_ground feature to work correctly throughout play
     public bool canMoveInAir = true;
+    SwipeController sc;
     Transform myTrans, tagGround;
     Rigidbody2D myBody;
-    SwipeController sc = new SwipeController();
     bool isGrounded = false;
     // prevents endless jumping
 
