@@ -117,11 +117,11 @@ public class PlayerV4 : MonoBehaviour
 			{
 				if (Input.GetKey(KeyCode.A))
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else if (Input.GetKey(KeyCode.D))
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else
 				{

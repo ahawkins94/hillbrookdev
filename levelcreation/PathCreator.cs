@@ -31,7 +31,7 @@ public class PathCreator : MonoBehaviour {
     //On awake load all the game objects for the prefeb folders. 
     //Before the game starts it maps out the path of the level
     void Awake() {
-        foreach (GameObject go in Resources.LoadAll<GameObject>("Prefabs")) {
+        foreach (GameObject go in Resources.LoadAll<GameObject>("LevelBlocks")) {
             levels.Add(go);
         }
 
