@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class MouseSwipeController : MonoBehaviour
 {
+    //
 
     //inside class
     Vector2 firstPressPos;
