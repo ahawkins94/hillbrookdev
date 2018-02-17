@@ -30,7 +30,7 @@ public class LevelCreator : MonoBehaviour {
         Vector2 playerSize = player.GetComponent<BoxCollider2D>().size;
 
 
-        //GameObject background = Instantiate(Resources.Load("Prefabs/Background/Background"), originalPosition, Quaternion.identity) as GameObject;
+        GameObject background = Instantiate(Resources.Load("Prefabs/Background/Background"), originalPosition, Quaternion.identity) as GameObject;
 
         levelPosition.y -= levelHeight;
         GameObject levelBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/Terrain"), levelPosition, Quaternion.identity) as GameObject;
