@@ -9,6 +9,15 @@ public class SwipeController : MonoBehaviour {
     Vector2 secondPressPos;
     Vector2 currentSwipe;
 
+    /*
+     * [x][y] = [x]:side [y]:direction
+     * 
+     * [x]: 1 LEFT, 2 RIGHT
+     * [y]: 0 HOLD, 1 UP, 3 RIGHT, 5 DOWN, 7 LEFT
+     * 
+     */
+    int[] output = { 8, 8 };
+
     float currentAngle;
 
     Vector2 originTouchPosition;
@@ -29,59 +38,54 @@ public class SwipeController : MonoBehaviour {
     float averageAngleHistory;
 
     int lengthRequiredTouchHistory = Screen.height/18;
-    int lengthRequiredRegisterSwipe = Screen.height/6;
+    int lengthRequiredRegisterSwipe = Screen.height/10;
     int lengthRequiredRegisterHold = Screen.height/36;
 
+
+
     float angle = 0;
-    string direction;
+    int direction;
     string input;
     bool swipeRegistered = false;
     float angleNormal;
-    
-    //int gradient = 0;
 
-    //public void Update()
-    //{
-    //    Tap();
-    //}
-
-    public string Tap()
+    public int[] Tap()
     {
-        Debug.Log(Input.touches.Length);
-        if (Input.touches.Length > 0)
-        {
-            var touch = Input.touches[0];
-            //Debug.Log("Debug Log: width: " + Screen.width + ", height: " + Screen.height);
-            //Debug.Log("Debug Log: x: " + touch.position.x + ", y: " + touch.position.y);
-
-            if (touch.position.x < Screen.width / 2)
+        
+        int length = Input.touches.Length;
+        if (length > 0) {
+            foreach (Touch touch in Input.touches)
             {
-                string swipeCheck2 = SwipeCheck3(touch);
-                string result = "Left," + swipeCheck2;
-                if (swipeCheck2 != "None") {
-                    Debug.Log("Debug Log: " + touch.phase);
-                    Debug.Log("Debug Log: " + result);
-                    return result;
-                }
-            }
-
-            if (touch.position.x > Screen.width / 2)
-            {
-                string swipeCheck2 = SwipeCheck3(touch);
-                string result = "Right," + swipeCheck2;
-                if (swipeCheck2 != "None")
+               
+                if (touch.position.x < Screen.width / 2)
                 {
-                    Debug.Log("Debug Log: " + result);
-                    return result;
+                    int swipeCheck2 = SwipeCheck3(touch);
+                    if (swipeCheck2 != 8 && swipeCheck2 != 0)
+                    {                       
+                        output[0] = swipeCheck2;
+                        Debug.Log("Debug Log: Output 0," + output[0]);
 
+                    }
+                }
+
+                if (touch.position.x > Screen.width / 2)
+                {
+                    int swipeCheck2 = SwipeCheck3(touch);
+                    if (swipeCheck2 != 8 && swipeCheck2 != 0)
+                    {
+                        Debug.Log("Debug Log: Output 1," + output[1]);
+                        output[1] = swipeCheck2;
+
+                    }
                 }
             }
         }
+    
 
-        return "None";
+        return output;
     } 
 
-    public string SwipeCheck3(Touch touch)
+    public int SwipeCheck3(Touch touch)
     {
         if(touch.phase == TouchPhase.Began)
         {
@@ -90,19 +94,19 @@ public class SwipeController : MonoBehaviour {
         }
 
         float distanceBetweenTouchesPrevious = Vector2.Distance(originTouchPosition, touch.position);
-        
-        if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe && !swipeRegistered) 
+        if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe && !swipeRegistered)
         {
             angle = SwipeDirection(originTouchPosition, touch.position);
-            Debug.Log("Debug Log: " + angle);
-
-            direction = AngleDirection(angle);
+            direction = AngleDirectionInt(angle);
 
             swipeRegistered = true;
-            return direction;            
+            return direction;
         }
 
-        return "None";
+        else
+        {
+            return 0;
+        }
     }
 
     //public string SwipeCheck2(Touch touch)
@@ -227,10 +231,10 @@ public class SwipeController : MonoBehaviour {
      * a new list that counts the change and then once reached over 270pixels then registers, as normally.
      * Moved the old list to the previousChangedAngleHistory
      */
-    public string RecentAngles(float recentAverageAngles, float newAngle) 
+    public int RecentAngles(float recentAverageAngles, float newAngle) 
     {
-        string recentAngleDirection = AngleDirection(recentAverageAngles);
-        string newAngleDirection = AngleDirection(newAngle);
+        int recentAngleDirection = AngleDirectionInt(recentAverageAngles);
+        int newAngleDirection = AngleDirectionInt(newAngle);
         if(!recentAngleDirection.Equals(newAngleDirection)) {
             previousChangedAngleHistory = recentAngleHistory;
             previousChangedTouchHistory = recentTouchHistory;
@@ -239,7 +243,7 @@ public class SwipeController : MonoBehaviour {
             return recentAngleDirection;
         }
 
-        return "None";
+        return 8;
     }
 
     public LinkedList<Vector2> RemoveFirstTouch(LinkedList<Vector2> touches, int size)
@@ -276,7 +280,7 @@ public class SwipeController : MonoBehaviour {
     /**
      * Returns the direction of the swipe
      */
-    public string AngleDirection(float angle)
+    public string AngleDirectionString(float angle)
     {
         if (angle < 45 || angle > 315)
         {
@@ -298,9 +302,31 @@ public class SwipeController : MonoBehaviour {
         return "None";
     }
 
+    public int AngleDirectionInt(float angle)
+    {
+        if (angle < 45 || angle > 315)
+        {
+            return 3;
+        }
+        if (angle < 135)
+        {
+            return 1;
+        }
+        if (angle < 225)
+        {
+            return 7;
+        }
+        if (angle < 335)
+        {
+            return 5;
+        }
+
+        return 8;
+    }
+
     /** 
      * Returns the angle between 2 vectors
-     */    
+     */
     public float SwipeDirection(Vector2 from, Vector2 to)
     {
        
