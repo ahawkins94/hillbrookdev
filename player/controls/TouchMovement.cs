@@ -29,7 +29,7 @@ public class TouchMovement : MonoBehaviour
 
     void Update()
     {
-        touchOutput = swipeController.Tap();
+        swipeController.Tap();
     }
 
     void FixedUpdate()
