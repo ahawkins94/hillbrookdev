@@ -10,31 +10,41 @@ public class TouchMovement : MonoBehaviour
     public LayerMask playerMask;
     // allows the tag_ground feature to work correctly throughout play
     public bool canMoveInAir = true;
-    SwipeController sc;
     Transform myTrans, tagGround;
     Rigidbody2D myBody;
     bool isGrounded = false;
     // prevents endless jumping
+    SwipeController swipeController;
+
+    string touchOutput;
 
     void Start()
     {
+        swipeController = this.GetComponent<SwipeController>();
         myBody = this.GetComponent<Rigidbody2D>();
         myTrans = this.transform;
         tagGround = GameObject.Find(this.name + "/tag_ground").transform;
         //will look for position of ground tag to see if jump is possible from start which is parented by "this"
     }
 
+    void Update()
+    {
+        touchOutput = swipeController.Tap();
+    }
+
     void FixedUpdate()
     {
         isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);
 
-        Move(sc.Tap());
-
-        //used to check for horiztonal movement and allows for key input to move
-        if (Input.GetButtonDown("Jump"))
+        if (touchOutput.Contains("Jump"))
         {
             Jump();
         }
+
+        Move(touchOutput);
+
+        //used to check for horiztonal movement and allows for key input to move
+        
 
         //used for key input to jump
         if (Input.GetKey(key: KeyCode.Escape))
@@ -53,12 +63,12 @@ public class TouchMovement : MonoBehaviour
             return;
         }
 
-        if (horizontalInput.Equals("Left"))
+        if (horizontalInput.Contains("Left"))
         {
             horizontalMovement = -1;
         }
 
-        if (horizontalInput.Equals("Right"))
+        if (horizontalInput.Contains("Right"))
         {
             horizontalMovement = 1;
         }
