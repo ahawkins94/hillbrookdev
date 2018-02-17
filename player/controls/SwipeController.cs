@@ -89,18 +89,15 @@ public class SwipeController : MonoBehaviour {
             originTouchPosition = touch.position;            
         }
 
-        float distanceBetweenTouchesPrevious = Vector2.Distance(previousTouchPosition, touch.position);
-        //if (touch.phase == TouchPhase.Ended )
-        //{
-        //    angle = SwipeDirection(previousTouchPosition, touch.position);
-        //    direction = AngleDirection(angle);
-        //    return direction;
-        //}
-
-        if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe) 
+        float distanceBetweenTouchesPrevious = Vector2.Distance(originTouchPosition, touch.position);
+        
+        if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe && !swipeRegistered) 
         {
-            angle = SwipeDirection(previousTouchPosition, touch.position);
+            angle = SwipeDirection(originTouchPosition, touch.position);
+            Debug.Log("Debug Log: " + angle);
+
             direction = AngleDirection(angle);
+
             swipeRegistered = true;
             return direction;            
         }
