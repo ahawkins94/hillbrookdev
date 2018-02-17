@@ -150,19 +150,19 @@ public class PlayerV4 : MonoBehaviour
 				
 				if(transform.localScale.x > 0 && Input.GetKey(KeyCode.D)) 
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else if (transform.localScale.x > 0 && Input.GetKey(KeyCode.A))
 				{
-					VelocityX = VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
+					VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
 				}
 				else if (transform.localScale.x < 0 && Input.GetKey(KeyCode.A))
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else if (transform.localScale.x < 0 && Input.GetKey(KeyCode.D))
 				{
-					VelocityX = VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
+					VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
 				}
 			}
 		}
@@ -345,19 +345,19 @@ public class PlayerV4 : MonoBehaviour
 
 				if(transform.localScale.x > 0 && Input.GetKey(KeyCode.D)) 
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else if (transform.localScale.x > 0 && Input.GetKey(KeyCode.A))
 				{
-					VelocityX = VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
+					VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
 				}
 				else if (transform.localScale.x < 0 && Input.GetKey(KeyCode.A))
 				{
-					VelocityX = VelocityX;
+					//VelocityX = VelocityX;
 				}
 				else if (transform.localScale.x < 0 && Input.GetKey(KeyCode.D))
 				{
-					VelocityX = VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
+					VelocityX = Mathf.SmoothDamp(VelocityX, (VelocityX*0.8f), ref smoothTime, friction);
 				}
 
 				// Wall Jumping State
