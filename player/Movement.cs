@@ -4,63 +4,85 @@ using UnityEngine;
 
 public class Movement : MonoBehaviour
 {
+    
+    // Player movement speed
+    public float speed = 1, jumpVelocity = 1;
 
-    public float speed = 10, jumpVelocity = 10;
-    // default speed and jump speed
-    public LayerMask playerMask;
-    // allows the tag_ground feature to work correctly throughout play
-    public bool canMoveInAir = true;
-    Transform myTrans, tagGround;
-    Rigidbody2D myBody;
-    bool isGrounded = false;
-    // prevents endless jumping
+    public bool grounded = true;   // Contact with floor
+
+    //public bool doubleJump = false;
+
+    private Rigidbody2D myBody;
 
     void Start()
     {
-        myBody = this.GetComponent<Rigidbody2D>();
-        myTrans = this.transform;
-        tagGround = GameObject.Find(this.name + "/tag_ground").transform;
-        //will look for position of ground tag to see if jump is possible from start which is parented by "this"
+        myBody = GetComponent<Rigidbody2D>();
+        grounded = true;
     }
 
-    void FixedUpdate()
+
+    // Detect collision with floor
+    void OnCollisionEnter2D(Collision2D collision2D)
     {
-        isGrounded = Physics2D.Linecast(myTrans.position, tagGround.position, playerMask);
-
-        Move(Input.GetAxisRaw("Horizontal"));
-
-        //used to check for horiztonal movement and allows for key input to move
-        if (Input.GetButtonDown("Jump"))
+        if (collision2D.gameObject.tag.Equals("Ground"))
         {
-            Jump();
+            grounded = true;
+            //doubleJump = false;
+        }
+    }
+    // While collided with floor
+    void OnCollisionStay2D(Collision2D collision2D)
+    {
+        if (collision2D.gameObject.tag.Equals("Ground"))
+        {
+            grounded = true;
+            //doubleJump = false;
+        }
+    }
+
+    // Detect collision exit with floor
+    void OnCollisionExit2D(Collision2D collision2D)
+    {
+        if (collision2D.gameObject.tag.Equals("Ground"))
+        {
+            grounded = false;
+            //doubleJump = true;
+        }
+    }
+
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.position = transform.position += transform.right * -speed * Time.deltaTime;
         }
 
-        //used for key input to jump
-        if (Input.GetKey(key: KeyCode.Escape))
+        if (Input.GetKey(KeyCode.D))
         {
-            Debug.Log("Escape");
-            MainMenu.GoLoadScene("Main");
+            transform.position = transform.position += transform.right * speed * Time.deltaTime;
         }
 
-    }
+        // Detect space key press and allow jump if collision with ground is true
 
-    public void Move(float horizontalInput)
-    {
-        if (!canMoveInAir && !isGrounded)
-            return;
+        //if (Input.GetKey(KeyCode.D) && Input.GetKeyDown(KeyCode.Space) && grounded)
+        //{
+        //    Debug.Log("pressed");
+        //    grounded = false;
+        //    myBody.velocity += jumpVelocity * Vector2.up;
+        //    transform.position = transform.position += transform.right * speed * Time.deltaTime;
 
-        Vector2 moveVel = myBody.velocity;
-        moveVel.x = horizontalInput * speed;
-        myBody.velocity = moveVel;
-        //horizontonal movement speeds
+        //}
 
-    }
-
-    public void Jump()
-    {
-        if (isGrounded)
-            //check to see if player is on ground to prevent continous jumping
+        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        {
+            grounded = false;
             myBody.velocity += jumpVelocity * Vector2.up;
-        //calculates the power of the jump
+        }
+
+        //if (Input.GetKey("space") && grounded == false)
+        //{
+        //    doubleJump = false;
+        //    myBody.velocity += jumpVelocity * Vector2.up;
+        //}
     }
 }
