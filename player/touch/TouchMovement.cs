@@ -2,13 +2,16 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Movement : MonoBehaviour
+public class TouchMovement : MonoBehaviour
 {
-    
+
     // Player movement speed
-    public float speed = 1, jumpVelocity = 1;
+    public float speed = 1, jumpVelocity = 3;
 
     public bool grounded = true;   // Contact with floor
+
+    SwipeController swipeController;
+    int[] touchOutput;
 
     //public bool doubleJump = false;
 
@@ -16,6 +19,7 @@ public class Movement : MonoBehaviour
 
     void Start()
     {
+        swipeController = this.GetComponent<SwipeController>();
         myBody = GetComponent<Rigidbody2D>();
         grounded = true;
     }
@@ -52,12 +56,14 @@ public class Movement : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetKey(KeyCode.A))
+        touchOutput = swipeController.Tap();
+        
+        if (touchOutput[0] == 0)
         {
             transform.position = transform.position += transform.right * -speed * Time.deltaTime;
         }
 
-        if (Input.GetKey(KeyCode.D))
+        if (touchOutput[1] == 0)
         {
             transform.position = transform.position += transform.right * speed * Time.deltaTime;
         }
@@ -73,7 +79,7 @@ public class Movement : MonoBehaviour
 
         //}
 
-        if (Input.GetKeyDown(KeyCode.Space) && grounded)
+        if (8 != touchOutput[1] && 0 != touchOutput[1] && grounded)
         {
             grounded = false;
             myBody.velocity += jumpVelocity * Vector2.up;
