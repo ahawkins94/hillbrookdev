@@ -94,6 +94,7 @@ public class SwipeController : MonoBehaviour {
         }
 
         float distanceBetweenTouchesPrevious = Vector2.Distance(originTouchPosition, touch.position);
+
         if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe && !swipeRegistered)
         {
             angle = SwipeDirection(originTouchPosition, touch.position);
