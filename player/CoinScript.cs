@@ -14,14 +14,14 @@ public class CoinScript : MonoBehaviour {
 		
 	}
 
-    private void OnTriggerEnter(Collider2D other)
+     void OnTriggerEnter2D(Collider2D other)
     {
-       if(other.name == "Player")
+        Debug.Log("coin");
+        if (other.gameObject.tag.Equals("Player"))
         {
-            Destroy(gameObject);
+            Debug.Log("destroy");
+            Destroy(this.gameObject);
         }
-
-
 
     }
 
