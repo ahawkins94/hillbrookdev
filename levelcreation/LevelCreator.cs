@@ -46,6 +46,10 @@ public class LevelCreator : MonoBehaviour
 
 
         GameObject camera = Instantiate(Resources.Load("Prefabs/Player/Camera"), cameraPosition, Quaternion.identity) as GameObject;
+
+        GameObject blockSize = Instantiate(Resources.Load("Prefabs/LevelBlocks/block 1"), levelPosition, Quaternion.identity) as GameObject;
+
+        Debug.Log(blockSize.GetComponent<Renderer>().bounds.size);
     }
 
 }
