@@ -19,6 +19,7 @@ public class TouchMovement : MonoBehaviour
 
     void Start()
     {
+        Application.targetFrameRate = 60;
         swipeController = this.GetComponent<SwipeController>();
         myBody = GetComponent<Rigidbody2D>();
         grounded = true;
