@@ -48,7 +48,7 @@ public class SwipeController : MonoBehaviour {
 
     int lengthRequiredTouchHistory = Screen.height/18;
     int lengthRequiredRegisterSwipe = Screen.height/20;
-    int lengthRequiredRegisterHold = Screen.height/24;
+    int lengthRequiredRegisterHold = Screen.height/36;
 
     float timeRequiredHold = 0.1f;
 
@@ -105,7 +105,7 @@ public class SwipeController : MonoBehaviour {
     {
         if(touch.phase == TouchPhase.Began)
         {
-            startTime = Time.time;
+            beginSwipeFrame = currentFrame;
             swipeRegistered = false;
             holdRegistered = false;
             originTouchPosition = touch.position;
@@ -116,6 +116,7 @@ public class SwipeController : MonoBehaviour {
 
         if (distanceBetweenTouchesPrevious > lengthRequiredRegisterSwipe && !swipeRegistered)
         {
+            holdRegistered = false;
             angle = SwipeDirection(originTouchPosition, touch.position);
             direction = AngleDirectionInt(angle);
 
@@ -125,13 +126,21 @@ public class SwipeController : MonoBehaviour {
         Debug.Log("Debug Log: " + currentFrame);
 
         /*
-        * if the distance 
+        * if the distance is less than the circle around the original contact and the number of frames has passed
         */
-        if (distanceBetweenTouchesPrevious < lengthRequiredRegisterHold && currentFrame > framesRequiredHold)
+        int deltaFrame = currentFrame - beginSwipeFrame;
+        if (distanceBetweenTouchesPrevious < lengthRequiredRegisterHold && deltaFrame > framesRequiredHold || holdRegistered)
         {
             originTouchPosition = touch.position;
             holdRegistered = true;
             return 0;
+        }
+
+        if(touch.phase == TouchPhase.Ended)
+        {
+            holdRegistered = false;
+            swipeRegistered = false;
+            return 8;
         }
 
         else
