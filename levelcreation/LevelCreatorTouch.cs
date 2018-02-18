@@ -5,23 +5,29 @@ using UnityEngine;
 public class LevelCreatorTouch : MonoBehaviour {
 
     public Vector3 originalPosition = new Vector3(0, 0, 0);
+
+    Vector3 playerPosition;
     Vector3 backgroundPosition;
     Vector3 levelPosition;
     Vector3 cameraPosition;
 
+
     public float cameraDistance = 1;
     public float backgroundDistance = -2;
-    public float levelDistance = -1;
+    public float levelDistance = 0;
     public float levelHeight = 0;
 
     void Awake()
     {
+        playerPosition = originalPosition;
         backgroundPosition = originalPosition;
         levelPosition = originalPosition;
         cameraPosition = originalPosition;
         backgroundPosition.z -= backgroundDistance;
-        cameraPosition.z = cameraDistance;
+        cameraPosition.z -= cameraDistance;
         levelPosition.z -= levelDistance;
+        playerPosition.y += 4;
+        
 
     }
 

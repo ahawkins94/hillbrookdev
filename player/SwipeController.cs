@@ -16,13 +16,22 @@ public class SwipeController : MonoBehaviour {
      * [y]: 0 HOLD, 1 UP, 3 RIGHT, 5 DOWN, 7 LEFT
      * 
      */
-    int[] output = { 8, 8 };
+    
 
     float currentAngle;
+
+    /*
+     * 
+     */
+    int beginSwipeFrame;
+    int currentFrame = 0;
+    int framesRequiredHold = 3;
 
     Vector2 originTouchPosition;
     Vector2 currentTouchPosition;
     Vector2 previousTouchPosition;
+
+
 
     Vector2 lastTouchPosition;
 
@@ -38,20 +47,26 @@ public class SwipeController : MonoBehaviour {
     float averageAngleHistory;
 
     int lengthRequiredTouchHistory = Screen.height/18;
-    int lengthRequiredRegisterSwipe = Screen.height/10;
-    int lengthRequiredRegisterHold = Screen.height/36;
+    int lengthRequiredRegisterSwipe = Screen.height/20;
+    int lengthRequiredRegisterHold = Screen.height/24;
 
-
+    float timeRequiredHold = 0.1f;
 
     float angle = 0;
     int direction;
     string input;
+
     bool swipeRegistered = false;
+    bool holdRegistered = false;
+
     float angleNormal;
+
+    float startTime;
 
     public int[] Tap()
     {
-        
+        currentFrame = Time.frameCount;
+        int[] output = { 8, 8 };
         int length = Input.touches.Length;
         if (length > 0) {
             foreach (Touch touch in Input.touches)
@@ -60,10 +75,11 @@ public class SwipeController : MonoBehaviour {
                 if (touch.position.x < Screen.width / 2)
                 {
                     int swipeCheck2 = SwipeCheck3(touch);
-                    if (swipeCheck2 != 8 && swipeCheck2 != 0)
+                    if (swipeCheck2 != 8)
                     {                       
                         output[0] = swipeCheck2;
                         Debug.Log("Debug Log: Output 0," + output[0]);
+
 
                     }
                 }
@@ -71,7 +87,7 @@ public class SwipeController : MonoBehaviour {
                 if (touch.position.x > Screen.width / 2)
                 {
                     int swipeCheck2 = SwipeCheck3(touch);
-                    if (swipeCheck2 != 8 && swipeCheck2 != 0)
+                    if (swipeCheck2 != 8)
                     {
                         Debug.Log("Debug Log: Output 1," + output[1]);
                         output[1] = swipeCheck2;
@@ -89,8 +105,11 @@ public class SwipeController : MonoBehaviour {
     {
         if(touch.phase == TouchPhase.Began)
         {
+            startTime = Time.time;
             swipeRegistered = false;
-            originTouchPosition = touch.position;            
+            holdRegistered = false;
+            originTouchPosition = touch.position;
+            
         }
 
         float distanceBetweenTouchesPrevious = Vector2.Distance(originTouchPosition, touch.position);
@@ -103,10 +122,21 @@ public class SwipeController : MonoBehaviour {
             swipeRegistered = true;
             return direction;
         }
+        Debug.Log("Debug Log: " + currentFrame);
+
+        /*
+        * if the distance 
+        */
+        if (distanceBetweenTouchesPrevious < lengthRequiredRegisterHold && currentFrame > framesRequiredHold)
+        {
+            originTouchPosition = touch.position;
+            holdRegistered = true;
+            return 0;
+        }
 
         else
         {
-            return 0;
+            return 8;
         }
     }
 
