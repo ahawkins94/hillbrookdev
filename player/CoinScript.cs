@@ -13,4 +13,17 @@ public class CoinScript : MonoBehaviour {
 	void Update () {
 		
 	}
+
+    private void OnTriggerEnter(Collider2D other)
+    {
+       if(other.name == "Player")
+        {
+            Destroy(gameObject);
+        }
+
+
+
+    }
+
+
 }
