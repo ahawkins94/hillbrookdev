@@ -26,7 +26,7 @@ public class TouchMovement : MonoBehaviour
 
 
     // Detect collision with floor
-    void OnCollisionEnter2D(Collision2D collision2D)
+    void OnTriggerEnter2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {
@@ -35,7 +35,7 @@ public class TouchMovement : MonoBehaviour
         }
     }
     // While collided with floor
-    void OnCollisionStay2D(Collision2D collision2D)
+    void OnTriggerStay2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {
@@ -45,7 +45,7 @@ public class TouchMovement : MonoBehaviour
     }
 
     // Detect collision exit with floor
-    void OnCollisionExit2D(Collision2D collision2D)
+    void OnTriggerExit2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {

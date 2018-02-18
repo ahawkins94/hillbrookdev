@@ -5,7 +5,6 @@ using UnityEngine;
 public class LevelCreatorTouch : MonoBehaviour {
 
     public Vector3 originalPosition = new Vector3(0, 0, 0);
-
     Vector3 playerPosition;
     Vector3 backgroundPosition;
     Vector3 levelPosition;
@@ -16,6 +15,8 @@ public class LevelCreatorTouch : MonoBehaviour {
     public float backgroundDistance = -2;
     public float levelDistance = 0;
     public float levelHeight = 0;
+
+    public BoxCollider2D[] components;
 
     void Awake()
     {
@@ -35,7 +36,8 @@ public class LevelCreatorTouch : MonoBehaviour {
     {
         GameObject player = Instantiate(Resources.Load("Prefabs/Player/PlayerTouch"), originalPosition, Quaternion.identity) as GameObject;
 
-        Vector2 playerSize = player.GetComponent<BoxCollider2D>().size;
+        components = player.GetComponentsInChildren<BoxCollider2D>();
+        levelPosition = components[3].size /2;
 
 
         GameObject background = Instantiate(Resources.Load("Prefabs/Background/Background"), backgroundPosition, Quaternion.identity) as GameObject;
