@@ -25,7 +25,6 @@ namespace Assets.Scripts.hillbrookdev.modules.swipeFactory
 
         public int beginSwipeFrame;
         public int currentSwipeFrame;
-
-        
+       
     }
 }

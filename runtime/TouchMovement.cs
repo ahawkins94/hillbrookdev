@@ -1,5 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.hillbrookdev.functions;
+
 using UnityEngine;
 
 public class TouchMovement : MonoBehaviour
@@ -11,6 +13,7 @@ public class TouchMovement : MonoBehaviour
     public bool grounded = true;   // Contact with floor
 
     SwipeController swipeController;
+    MovementPhysics movementPhysics;
     int[] touchOutput;
 
     //public bool doubleJump = false;
@@ -19,7 +22,7 @@ public class TouchMovement : MonoBehaviour
 
     void Start()
     {
-        Application.targetFrameRate = 60;
+        movementPhysics = new MovementPhysics();
         swipeController = this.GetComponent<SwipeController>();
         myBody = GetComponent<Rigidbody2D>();
         grounded = true;
@@ -80,10 +83,16 @@ public class TouchMovement : MonoBehaviour
 
         //}
 
-        if (8 != touchOutput[1] && 0 != touchOutput[1] && grounded)
+        if (1 == touchOutput[1] && grounded)
         {
             grounded = false;
-            myBody.velocity += jumpVelocity * Vector2.up;
+
+            /*
+             * Transform Vector2(x,y)
+             */
+            jumpVelocity =  movementPhysics.MovementSpeed(4, 4, 30);
+            Debug.Log("Debug Log: Speed: " + jumpVelocity);
+            transform.Translate(movementPhysics.StandardUnitConversion(3,3), Space.Self); 
         }
 
         //if (Input.GetKey("space") && grounded == false)

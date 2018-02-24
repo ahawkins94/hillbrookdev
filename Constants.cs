@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace Assets.Scripts.hillbrookdev{ 
+namespace Assets.Scripts.hillbrookdev
+{
 
-public class Constants{
+    public class Constants
+    {
 
-    public const float STANDARD_UNIT = 0.1;
+        public const float STANDARD_UNIT = 0.1f;
 
-     
+
+    }
 }

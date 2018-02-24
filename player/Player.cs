@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Player : MonoBehaviour {
-
-    public string vikingType = "viking1";
-
-    public Player(string vikingType)
+namespace Assets.Scripts.hillbrookdev.player
+{
+    public class Player
     {
-        this.vikingType = vikingType;
+
+        public int health = 100;
+        public int mana = 100;
+        public int coins = 0;
+
     }
-
-
 }

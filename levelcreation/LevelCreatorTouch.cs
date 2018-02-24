@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.hillbrookdev.player;
 using UnityEngine;
 
 public class LevelCreatorTouch : MonoBehaviour {
@@ -18,6 +19,8 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     public BoxCollider2D[] components;
 
+    public Player playerStats;
+
     void Awake()
     {
         playerPosition = originalPosition;
@@ -28,6 +31,9 @@ public class LevelCreatorTouch : MonoBehaviour {
         cameraPosition.z -= cameraDistance;
         levelPosition.z -= levelDistance;
         playerPosition.y += 4;
+
+        playerStats = new Player();
+        playerStats.coins++;
         
 
     }
@@ -35,7 +41,6 @@ public class LevelCreatorTouch : MonoBehaviour {
     void Start()
     {
         GameObject player = Instantiate(Resources.Load("Prefabs/Player/PlayerTouch"), originalPosition, Quaternion.identity) as GameObject;
-
         components = player.GetComponentsInChildren<BoxCollider2D>();
         levelPosition = components[3].size /2;
 
@@ -47,6 +52,7 @@ public class LevelCreatorTouch : MonoBehaviour {
 
 
         GameObject camera = Instantiate(Resources.Load("Prefabs/Player/Camera"), cameraPosition, Quaternion.identity) as GameObject;
+        Debug.Log(playerStats.coins);
     }
 
 }
