@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour {
 
     public string vikingType = "viking1";
+    public int coins = 0;
 
     public Player(string vikingType)
     {

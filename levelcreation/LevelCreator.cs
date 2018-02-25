@@ -7,6 +7,7 @@ public class LevelCreator : MonoBehaviour
 
     public Vector3 originalPosition = new Vector3(0, 0, 0);
 
+    public GameObject player;
     Vector3 playerPosition;
     Vector3 backgroundPosition;
     Vector3 levelPosition;
@@ -34,7 +35,7 @@ public class LevelCreator : MonoBehaviour
         
     void Start()
     {
-        GameObject player = Instantiate(Resources.Load("Prefabs/Player/Player"), originalPosition, Quaternion.identity) as GameObject;
+        player = Instantiate(Resources.Load("Prefabs/Player/Player"), originalPosition, Quaternion.identity) as GameObject;
 
         Vector2 playerSize = player.GetComponent<BoxCollider2D>().size;
 
