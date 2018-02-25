@@ -9,6 +9,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         Rigidbody2D rgbd;
         GameObject player;
 
+        Vector3 groundedContact;
         Vector3 playerPosition;
 
         void Start()
@@ -23,32 +24,22 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         {
             if (col.gameObject.tag == "Ground")
             {
-                Vector3 distance = col.bounds.center;
-                Vector3 max = col.bounds.max;
-                Vector3 min = col.bounds.min;
-
-                Debug.Log("staRT");
-                Debug.Log(distance);
-                Debug.Log(max);
-                Debug.Log(min);
-
-
+                Vector3 position = player.transform.position;
+                Debug.Log("Bounds: " + position);
                 PlayerRun.playerVariable.isGrounded = true;
-                player.transform.Translate(new Vector3(0, -distance.y, 0));
             }
-
         }
+
         // While collided with floor
         void OnTriggerStay2D(Collider2D col)
         {
             if (col.gameObject.tag == "Ground")
             {
                 PlayerRun.playerVariable.isGrounded = true;
-                player.transform.position = new Vector3(player.transform.position.x, playerPosition.y, 0);
+                //player.transform.position = new Vector3(player.transform.position.x, playerPosition.y, 0);
 
             }
         }
-
 
         // Detect collision exit with floor
         void OnTriggerExit2D(Collider2D col)
@@ -57,6 +48,12 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             {
                 PlayerRun.playerVariable.isGrounded = false;
             }
+        }
+
+        void OnCollisionEnter2D(Collision2D col) {
+            var contacts = col.contacts;
+            groundedContact = contacts[0].point;
+            Debug.Log("Grounded contact: " + groundedContact);
         }
     }
 }

@@ -42,7 +42,10 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         void Update()
         {
             isGrounded = PlayerRun.playerVariable.isGrounded;
-            
+            if (isGrounded) {
+                RunGroundAlign();
+            }
+
             if (inMotion || isGrounded)
             {
                 StopCoroutine("Gravity");
@@ -139,6 +142,13 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
                 transform.Translate(distancePerFrame);
                 yield return null;
             }
+        }
+
+        void RunGroundAlign() {
+
+            double y =  transform.position.y;        
+            Debug.Log(y);
+            //transform.position = new Vector3(0, (float) y, 0);
         }
     }
 }
