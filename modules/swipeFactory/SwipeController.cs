@@ -42,7 +42,7 @@ public class SwipeController : MonoBehaviour {
                     {
                         output[0] = swipeCheck;
                         if (output[0] != 0) { 
-                            Debug.Log("Debug Log: Output 0," + output[0]);
+                            //Debug.Log("Debug Log: Output 0," + output[0]);
                         }
 
                     }
@@ -61,7 +61,7 @@ public class SwipeController : MonoBehaviour {
                         output[1] = swipeCheck;
                         if (output[1] != 0)
                         {
-                            Debug.Log("Debug Log: Output 1," + output[1]);
+                            //Debug.Log("Debug Log: Output 1," + output[1]);
                         }
                     }
                 }
