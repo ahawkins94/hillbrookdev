@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace Assets.Scripts.hillbrookdev.player.touch
+namespace Assets.Scripts.hillbrookdev.modules.swipeFactory
 {
     public class SwipeProfile
     {
@@ -25,7 +25,6 @@ namespace Assets.Scripts.hillbrookdev.player.touch
 
         public int beginSwipeFrame;
         public int currentSwipeFrame;
-
-        
+       
     }
 }

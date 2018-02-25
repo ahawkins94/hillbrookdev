@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using Assets.Scripts.hillbrookdev.player.touch;
+using Assets.Scripts.hillbrookdev.modules.swipeFactory;
 using UnityEngine;
 
 public class SwipeController : MonoBehaviour {
@@ -32,25 +32,37 @@ public class SwipeController : MonoBehaviour {
                
                 if (touch.position.x < Screen.width / 2)
                 {
-                    int swipeCheck2 = SwipeCheck(touch, left);
-                    if (swipeCheck2 != 8)
-                    {                       
-                        output[0] = swipeCheck2;
-                        Debug.Log("Debug Log: Output 0," + output[0]);
+                    if(left == null)
+                    {
+                        left = new SwipeProfile();
+                    }
 
+                    int swipeCheck = SwipeCheck(touch, left);
+                    if (swipeCheck != 8)
+                    {
+                        output[0] = swipeCheck;
+                        if (output[0] != 0) { 
+                            //Debug.Log("Debug Log: Output 0," + output[0]);
+                        }
 
                     }
                 }
 
                 if (touch.position.x > Screen.width / 2)
                 {
-                    
-                    int swipeCheck2 = SwipeCheck(touch, right);
-                    if (swipeCheck2 != 8)
+                    if (right == null)
                     {
-                        Debug.Log("Debug Log: Output 1," + output[1]);
-                        output[1] = swipeCheck2;
+                        right = new SwipeProfile();
+                    }
 
+                    int swipeCheck = SwipeCheck(touch, right);
+                    if (swipeCheck != 8)
+                    {
+                        output[1] = swipeCheck;
+                        if (output[1] != 0)
+                        {
+                            //Debug.Log("Debug Log: Output 1," + output[1]);
+                        }
                     }
                 }
             }
