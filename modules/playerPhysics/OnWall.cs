@@ -4,12 +4,11 @@ using UnityEngine;
 
 namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 {
-    public class Grounded : MonoBehaviour
+    public class OnWall : MonoBehaviour
     {
         Rigidbody2D rgbd;
         GameObject player;
 
-        Vector3 groundedContact;
         Vector3 playerPosition;
 
         void Start()
@@ -35,7 +34,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         {
             if (col.gameObject.tag == "Ground")
             {
-                PlayerRun.playerVariable.isGrounded = true;
+                PlayerRun.playerVariable.isWall = true;
                 //player.transform.position = new Vector3(player.transform.position.x, playerPosition.y, 0);
 
             }
@@ -46,14 +45,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         {
             if (col.gameObject.tag == "Ground")
             {
-                PlayerRun.playerVariable.isGrounded = false;
+                PlayerRun.playerVariable.isWall = false;
             }
-        }
-
-        void OnCollisionEnter2D(Collision2D col) {
-            var contacts = col.contacts;
-            groundedContact = contacts[0].point;
-            Debug.Log("Grounded contact: " + groundedContact);
         }
     }
 }

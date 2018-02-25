@@ -26,4 +26,8 @@ public class LevelBlock : MonoBehaviour {
 	public List<GameObject> canPathdef;
 	public float sceneWidth;
 	public float sceneHeight;
+
+
+
+
 }

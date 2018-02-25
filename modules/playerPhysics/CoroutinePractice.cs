@@ -54,7 +54,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             {
                 StartCoroutine("Gravity");
             }
-            if (Input.GetKeyDown(KeyCode.Space))
+            
+            if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !inMotion)
             {
                 coroutine = DashForward(dashX, dashY, elapsedFrames);
                 StartCoroutine(coroutine);
@@ -118,16 +119,19 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             Vector3 distancePerFrame = MovementPhysics.MovementVelocity(dashX, dashY, elapsedFrames);
             //Vector3(1/30, 0, 0)
             for (int i = 0; i < elapsedFrames; i++)
-            {
-                inMotion = true;
-                transform.Translate(distancePerFrame);
-                yield return null;
+            {        
+                    inMotion = true;
+                    transform.Translate(distancePerFrame);
+                    yield return null;
+                
             }
+
             double x = System.Math.Round(transform.position.x, 2);
             transform.position = new Vector3((float)x, transform.position.y, transform.position.z);
             inMotion = false;
             Vector3 distanceAfter = new Vector3(distancePerFrame.x + distancePerFrame.y/2, 0, 0);
-            while(!isGrounded)
+
+            while(!isGrounded && !inMotion)
             {
                 transform.Translate(distanceAfter);
                 yield return null;
