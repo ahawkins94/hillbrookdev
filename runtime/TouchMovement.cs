@@ -6,15 +6,20 @@ using UnityEngine;
 
 public class TouchMovement : MonoBehaviour
 {
+    private IEnumerator coroutine;
 
     // Player movement speed
     public float speed = 1, jumpVelocity = 3;
 
     public bool grounded = true;   // Contact with floor
 
+
     SwipeController swipeController;
     MovementPhysics movementPhysics;
     int[] touchOutput;
+
+    bool inMotion = false;
+    
 
     //public bool doubleJump = false;
 
@@ -60,8 +65,12 @@ public class TouchMovement : MonoBehaviour
 
     void Update()
     {
+        if(inMotion)
+        {
+            coroutine.MoveNext();
+        }
         touchOutput = swipeController.Tap();
-        
+
         if (touchOutput[0] == 0)
         {
             transform.position = transform.position += transform.right * -speed * Time.deltaTime;
@@ -90,9 +99,8 @@ public class TouchMovement : MonoBehaviour
             /*
              * Transform Vector2(x,y)
              */
-            jumpVelocity =  movementPhysics.MovementSpeed(4, 4, 30);
-            Debug.Log("Debug Log: Speed: " + jumpVelocity);
-            transform.Translate(movementPhysics.StandardUnitConversion(3,3), Space.Self); 
+            StartCoroutine(coroutine);
+
         }
 
         //if (Input.GetKey("space") && grounded == false)
