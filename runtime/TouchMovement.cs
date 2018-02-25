@@ -1,17 +1,25 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using Assets.Scripts.hillbrookdev.functions;
+
 using UnityEngine;
 
 public class TouchMovement : MonoBehaviour
 {
+    private IEnumerator coroutine;
 
     // Player movement speed
     public float speed = 1, jumpVelocity = 3;
 
     public bool grounded = true;   // Contact with floor
 
+
     SwipeController swipeController;
+    MovementPhysics movementPhysics;
     int[] touchOutput;
+
+    bool inMotion = false;
+    
 
     //public bool doubleJump = false;
 
@@ -19,6 +27,7 @@ public class TouchMovement : MonoBehaviour
 
     void Start()
     {
+        movementPhysics = new MovementPhysics();
         swipeController = this.GetComponent<SwipeController>();
         myBody = GetComponent<Rigidbody2D>();
         grounded = true;
@@ -26,7 +35,7 @@ public class TouchMovement : MonoBehaviour
 
 
     // Detect collision with floor
-    void OnCollisionEnter2D(Collision2D collision2D)
+    void OnTriggerEnter2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {
@@ -35,7 +44,7 @@ public class TouchMovement : MonoBehaviour
         }
     }
     // While collided with floor
-    void OnCollisionStay2D(Collision2D collision2D)
+    void OnTriggerStay2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {
@@ -45,7 +54,7 @@ public class TouchMovement : MonoBehaviour
     }
 
     // Detect collision exit with floor
-    void OnCollisionExit2D(Collision2D collision2D)
+    void OnTriggerExit2D(Collider2D collision2D)
     {
         if (collision2D.gameObject.tag.Equals("Ground"))
         {
@@ -56,8 +65,12 @@ public class TouchMovement : MonoBehaviour
 
     void Update()
     {
+        if(inMotion)
+        {
+            coroutine.MoveNext();
+        }
         touchOutput = swipeController.Tap();
-        
+
         if (touchOutput[0] == 0)
         {
             transform.position = transform.position += transform.right * -speed * Time.deltaTime;
@@ -79,10 +92,15 @@ public class TouchMovement : MonoBehaviour
 
         //}
 
-        if (8 != touchOutput[1] && 0 != touchOutput[1] && grounded)
+        if (1 == touchOutput[1] && grounded)
         {
             grounded = false;
-            myBody.velocity += jumpVelocity * Vector2.up;
+
+            /*
+             * Transform Vector2(x,y)
+             */
+            StartCoroutine(coroutine);
+
         }
 
         //if (Input.GetKey("space") && grounded == false)
