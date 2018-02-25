@@ -9,6 +9,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
     {
 
         public bool isGrounded;
+
         public bool isWall;
 
         public PlayerVariable()
