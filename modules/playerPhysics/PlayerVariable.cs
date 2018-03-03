@@ -12,6 +12,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
         public bool isWall;
 
+        public int airMotionCounter = 0;
+
         public PlayerVariable()
         {
           

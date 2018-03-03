@@ -32,6 +32,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
                 Vector3 position = player.transform.position;
                 // Debug.Log("Bounds: " + position);
                 PlayerRun.playerVariable.isGrounded = true;
+                PlayerRun.playerVariable.airMotionCounter = 0;
             }
         }
 

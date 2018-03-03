@@ -10,38 +10,44 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 {
     public class CoroutinePractice : MonoBehaviour
     {
-
-        IEnumerator coroutine;
-
-        public float speed = 1.5f;
-
+        public float speed = 1f;
         public bool inMotion = false;
-        public bool applyGravity = true;
+        public int airMotionCounter = 0;
         public bool isGrounded = false;
-
+        public bool isWall = false;
+        public bool directionFacing = true; //true = right, false = left;
         public int elapsedFrames = 30;
-        public int dashX = 3;
-        public int dashY = 3;
 
+        int jumpX = 3;
+        int jumpY = 3;
+        int dashX = 5;
+        int dashY = 0;
         public int gravity = -1;
-
-        public Vector3 velocity;
         private Vector3 moveSpeed;
 
+        SpriteRenderer spriteRenderer;
+        IEnumerator jumpForward;
+        IEnumerator dashForward;
+
+        IEnumerator wallJump;
         Rigidbody2D rgbd;
         BoxCollider2D boxCollider;
 
         // Use this for initialization
         void Start()
         {
-            rgbd = GetComponent<Rigidbody2D>();            
-            moveSpeed = MovementPhysics.MovementVelocity(1, 0, 30);
+            rgbd = GetComponent<Rigidbody2D>();        
+            spriteRenderer = GetComponent<SpriteRenderer>();    
+            moveSpeed = MovementPhysics.MovementVelocity(speed, 0, 300);
 
         }
 
         void Update()
         {
+            isWall = PlayerRun.playerVariable.isWall;
             isGrounded = PlayerRun.playerVariable.isGrounded;
+            airMotionCounter = PlayerRun.playerVariable.airMotionCounter;
+
             if (isGrounded && !inMotion) {
                 RunGroundAlign();
             }
@@ -54,11 +60,27 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             {
                 StartCoroutine("Gravity");
             }
+
+            if(isWall) {
+                StopAllCoroutines();
+                wallJump = DashForward(2, 4, 30);
+                StartCoroutine(wallJump);
+                Flip();
+            }
             
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !inMotion)
             {
-                coroutine = DashForward(dashX, dashY, elapsedFrames);
-                StartCoroutine(coroutine);
+
+                jumpForward = DashForward(jumpX, jumpY, elapsedFrames);
+                StopAllCoroutines();
+                StartCoroutine(jumpForward);
+            }
+
+            if (Input.GetKeyDown(KeyCode.F)) {
+
+                dashForward = DashForward(dashX, dashY, 30);
+                StopAllCoroutines();
+                StartCoroutine(dashForward);
             }
 
             StartCoroutine("RightMovement");
@@ -72,32 +94,13 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             //rgbd.velocity = new Vector3(0, rgbd.velocity.y, 0);
         }
 
-        IEnumerator TextCoroutine()
-        {
-
-            Debug.Log("Debug Log: Start");
-            yield return null;
-
-            for (int i = 0; i < 180; i++)
-            {
-                if (i == 60)
-                {
-                    Debug.Log("Debug Log: Middle");
-                }
-                if (i == 179)
-                {
-                    Debug.Log("Debug Log: Loop End");
-                }
-                yield return null;
-            }
-            Debug.Log("Debug Log: End");
-            inMotion = false;
-        }
-
         IEnumerator RightMovement()
         {
             while (Input.GetKey(KeyCode.D) && isGrounded && !inMotion)
             {
+                if(!directionFacing) { 
+                    Flip();
+                }
                 transform.Translate(moveSpeed);
                 yield return null;
             }
@@ -108,6 +111,9 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
             while (Input.GetKey(KeyCode.A) && isGrounded && !inMotion)
             {
+                if(directionFacing) { 
+                    Flip();
+                }
                 transform.Translate(-moveSpeed);
                 yield return null;
             }
@@ -115,7 +121,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
         IEnumerator DashForward(int dashX, int dashY, int elapsedFrames)
         {
-
+            airMotionCounter++;
             Vector3 distancePerFrame = MovementPhysics.MovementVelocity(dashX, dashY, elapsedFrames);
             //Vector3(1/30, 0, 0)
             for (int i = 0; i < elapsedFrames; i++)
@@ -155,18 +161,23 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         void RunGroundAlign() {
 
             float y =  transform.position.y;   
-            
+            Debug.Log(y);
             //set y = 0.16 for the first one
             y = y - 0.105f;
             float standardY = Mathf.RoundToInt(y/0.16f);
-            Debug.Log(y);
-            Debug.Log(standardY);
             float clampPosY = (standardY * 0.16f) + 0.105f;
 
             float posY = Mathf.Clamp(y, clampPosY, clampPosY);
 
             transform.position = new Vector3(transform.position.x, posY, transform.position.z);
             //transform.position = new Vector3(0, (float) y, 0);
+        }
+
+        void Flip() {
+            transform.localScale = new Vector3(transform.localScale.x * -1, 1, 1);
+            directionFacing = !directionFacing;
+            jumpX *= -1;
+            dashX *= -1;
         }
     }
 }

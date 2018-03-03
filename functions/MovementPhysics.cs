@@ -11,7 +11,7 @@ namespace Assets.Scripts.hillbrookdev.functions
         Vector3 result;
 
         //This method takes the distance required in the number of frames
-        public static Vector3 MovementVelocity(int x, int y, int frames)
+        public static Vector3 MovementVelocity(float x, float y, int frames)
         {
             float xT = x * Constants.STANDARD_UNIT / frames;
             float yT = y * Constants.STANDARD_UNIT / frames;

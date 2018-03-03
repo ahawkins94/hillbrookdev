@@ -12,7 +12,7 @@ public class KillPlayer : MonoBehaviour {
 
     void OnTriggerEnter2D(Collider2D other) {
         Debug.Log(other.tag);
-        if (other.tag.Equals("Killzone")) {
+        if (other.tag.Equals("Player")) {
             Debug.Log("collided");
             levelManager.RespawnPlayer();
         }

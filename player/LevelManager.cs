@@ -3,14 +3,14 @@ using System.Collections;
 
 public class LevelManager : MonoBehaviour {
 
-    public Vector2 playerPosition;
+    public Vector3 playerPosition;
 
-    public Vector2 currentCheckpoint;
+    public Vector3 currentCheckpoint;
 
     //Use this for initialization
     void Start() {
-        playerPosition = new Vector2(transform.position.x, transform.position.y);
-        currentCheckpoint = playerPosition;
+        playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
+        currentCheckpoint = new Vector3(0.16f, 0.5f, 20f);
     }
 
     void OnCollisionEnter2D(Collision2D other) {

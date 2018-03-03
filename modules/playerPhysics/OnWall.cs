@@ -9,8 +9,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         Rigidbody2D rgbd;
         GameObject player;
 
-        Vector3 playerPosition;
-
         void Start()
         {
             rgbd = GetComponent<Rigidbody2D>();
@@ -21,29 +19,27 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         // Detect collision with floor
         void OnTriggerEnter2D(Collider2D col)
         {
-            if (col.gameObject.tag == "Ground")
+            if (col.gameObject.tag == "Wall")
             {
-                Vector3 position = player.transform.position;
                 // Debug.Log("Bounds: " + position);
-                PlayerRun.playerVariable.isGrounded = true;
+                PlayerRun.playerVariable.isWall = true;
             }
         }
 
         // While collided with floor
         void OnTriggerStay2D(Collider2D col)
         {
-            if (col.gameObject.tag == "Ground")
+            if (col.gameObject.tag == "Wall")
             {
                 PlayerRun.playerVariable.isWall = true;
                 //player.transform.position = new Vector3(player.transform.position.x, playerPosition.y, 0);
-
             }
         }
 
         // Detect collision exit with floor
         void OnTriggerExit2D(Collider2D col)
         {
-            if (col.gameObject.tag == "Ground")
+            if (col.gameObject.tag == "Wall")
             {
                 PlayerRun.playerVariable.isWall = false;
             }
