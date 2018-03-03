@@ -42,7 +42,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         void Update()
         {
             isGrounded = PlayerRun.playerVariable.isGrounded;
-            if (isGrounded) {
+            if (isGrounded && !inMotion) {
                 RunGroundAlign();
             }
 
@@ -120,6 +120,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             //Vector3(1/30, 0, 0)
             for (int i = 0; i < elapsedFrames; i++)
             {        
+                    isGrounded = false;
                     inMotion = true;
                     transform.Translate(distancePerFrame);
                     yield return null;
@@ -148,10 +149,23 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             }
         }
 
+        /*
+         * When the ground is at 1 the player is at 0.265, 2:0.425, 3:0.585
+         */
         void RunGroundAlign() {
 
-            double y =  transform.position.y;        
+            float y =  transform.position.y;   
+            
+            //set y = 0.16 for the first one
+            y = y - 0.105f;
+            float standardY = Mathf.RoundToInt(y/0.16f);
             Debug.Log(y);
+            Debug.Log(standardY);
+            float clampPosY = (standardY * 0.16f) + 0.105f;
+
+            float posY = Mathf.Clamp(y, clampPosY, clampPosY);
+
+            transform.position = new Vector3(transform.position.x, posY, transform.position.z);
             //transform.position = new Vector3(0, (float) y, 0);
         }
     }
