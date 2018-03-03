@@ -29,7 +29,7 @@ public class LevelGenerator : MonoBehaviour {
 		prefabName.Clear ();
 
         //Loads up the starting block which is defined by path and adds to the level list to be loaded for the level
-		GameObject start = Instantiate (Resources.Load ("Prefabs/StartBlock"), new Vector3 (0, 4.5f, 0), Quaternion.identity) as GameObject;
+		GameObject start = Instantiate (Resources.Load ("Prefabs/LevelBlocks/GenTest/LevelBlock_flat_14"), new Vector3 (0, 4.5f, 0), Quaternion.identity) as GameObject;
 		levelList.Add (start);
 
         //iterate through until you reach the defined number of level blocks 

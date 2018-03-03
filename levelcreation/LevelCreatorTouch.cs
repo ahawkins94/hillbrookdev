@@ -6,14 +6,13 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     public Vector3 originalPosition = new Vector3(0, 0, 0);
 
-    Vector3 playerPosition;
-    Vector3 backgroundPosition;
-    Vector3 levelPosition;
+    Vector3 playerPosition = new Vector3(0.16f, 0.265f, 0);
+    Vector3 backgroundPosition = new Vector3(1.2f, 0.66f, 0);
+    Vector3 levelPosition = new Vector3(0.56f, -0.48f, 0);
     Vector3 cameraPosition;
 
     public float playerDistance = 20;
     public float cameraDistance = 10;
-    public float levelDistance = 20;
     public float backgroundDistance = 50;
 
     public float playerHeight = 1f;
@@ -26,41 +25,22 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     void Awake()
     {
-        playerPosition = originalPosition;
-        backgroundPosition = originalPosition;
-        levelPosition = originalPosition;
         cameraPosition = originalPosition;
         backgroundPosition.z += backgroundDistance;
-        cameraPosition.z += cameraDistance;
-        levelPosition.z += levelDistance;
-
-        levelPosition.y += levelHeight;
-        backgroundPosition.y += backgroundHeight;
-        cameraPosition.y += cameraHeight;
-        playerPosition.y += playerHeight;
-
-        //playerStats.coins++;
-        
+        cameraPosition.z += cameraDistance;       
 
     }
 
     void Start()
     {
         GameObject player = Instantiate(Resources.Load("Prefabs/Player/PlayerTouch"), playerPosition, Quaternion.identity) as GameObject;
-        components = player.GetComponentsInChildren<BoxCollider2D>();
-        //levelPosition = components[3].size /2;
-
-
         GameObject background = Instantiate(Resources.Load("Prefabs/Background/Background"), backgroundPosition, Quaternion.identity) as GameObject;
-
-        GameObject startBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/LevelBlock_flat_14"), levelPosition, Quaternion.identity) as GameObject;
-
-        
-
-
+        GameObject startBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/GenTest/LevelBlock_flat_14"), levelPosition, Quaternion.identity) as GameObject;
         GameObject camera = Instantiate(Resources.Load("Prefabs/Player/Camera"), cameraPosition, Quaternion.identity) as GameObject;
-        //Debug.Log(playerStats.coins);
+
+        components = player.GetComponentsInChildren<BoxCollider2D>();
         BoxCollider2D startBlockBox = startBlock.GetComponent<BoxCollider2D>();
+        //transormRelativeOrigin(startBlockBox);
     }
 
     void transormRelativeOrigin(BoxCollider2D col) {
@@ -75,8 +55,7 @@ public class LevelCreatorTouch : MonoBehaviour {
         Debug.Log(minY);
         Debug.Log(minX); 
         Debug.Log(maxY);
-        Debug.Log(maxX); 
-    
+        Debug.Log(maxX);   
     }
 
 }
