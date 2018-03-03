@@ -19,6 +19,11 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             player = GameObject.FindWithTag("Player");
         }
 
+        /*
+         * position player lands = y
+         * Mathf.Clamp()
+         */
+
         // Detect collision with floor
         void OnTriggerEnter2D(Collider2D col)
         {
