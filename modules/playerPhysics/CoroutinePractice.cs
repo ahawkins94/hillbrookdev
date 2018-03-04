@@ -10,7 +10,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 {
     public class CoroutinePractice : MonoBehaviour
     {
-        public float speed = 1f;
+        public float speed = 4f;
         public bool inMotion = false;
         public int airMotionCounter = 0;
         public bool isGrounded = false;
@@ -18,28 +18,40 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         public bool directionFacing = true; //true = right, false = left;
         public int elapsedFrames = 30;
 
+        public Vector2 veloctiy;
+
         int jumpX = 3;
         int jumpY = 3;
-        int dashX = 5;
+        int dashX = 4;
         int dashY = 0;
-        public int gravity = -1;
-        private Vector3 moveSpeed;
+        public int gravity = -32;
+        private Vector3 moveSpeedVector;
 
         SpriteRenderer spriteRenderer;
+
+        IEnumerator move;
         IEnumerator jumpForward;
         IEnumerator dashForward;
-
         IEnumerator wallJump;
         Rigidbody2D rgbd;
         BoxCollider2D boxCollider;
 
+        Animation animation;
+
+        Vector3 movementSpeedVector;
+
+
+
         // Use this for initialization
         void Start()
         {
-            rgbd = GetComponent<Rigidbody2D>();        
-            spriteRenderer = GetComponent<SpriteRenderer>();    
-            moveSpeed = MovementPhysics.MovementVelocity(speed, 0, 300);
+            
+            movementSpeedVector = MovementPhysics.MovementVelocity(speed, 0, 60);
 
+            spriteRenderer = GetComponent<SpriteRenderer>();  
+            animation = GetComponent<Animation>();              
+            // StartCoroutine(DirectionRight());
+            // StartCoroutine(DirectionLeft());
         }
 
         void Update()
@@ -61,61 +73,91 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
                 StartCoroutine("Gravity");
             }
 
-            if(isWall) {
-                StopAllCoroutines();
-                wallJump = DashForward(2, 4, 30);
-                StartCoroutine(wallJump);
-                Flip();
+        
+            WallJump();
+            Dash();  
+            Jump();  
+
+
+            if(Input.GetKey(KeyCode.D) && isGrounded && !inMotion) {
+                    PlayerRun.playerVariable.moveSpeed ++;           
+                    Flip(true);
+                    transform.position += movementSpeedVector;
+
             }
-            
+            else if(Input.GetKey(KeyCode.A) && isGrounded && !inMotion) {
+                    PlayerRun.playerVariable.moveSpeed ++;           
+                    Flip(false);
+                    transform.position -= movementSpeedVector;
+            } 
+            if(!Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.A)) {
+                PlayerRun.playerVariable.moveSpeed = 0;           
+            }
+          
+        }
+
+
+        IEnumerator DirectionRight() {
+            while(true) {
+                if(Input.GetKey(KeyCode.D) && isGrounded && !inMotion) {
+                    Flip(true);
+                    transform.position += movementSpeedVector;
+                    PlayerRun.playerVariable.moveSpeed ++;           
+
+                }
+                yield return null;
+            }
+        }
+
+        IEnumerator DirectionLeft() {
+            while(true) {
+                if(Input.GetKey(KeyCode.A) && isGrounded && !inMotion) {
+                    Flip(false);
+                    transform.position -= movementSpeedVector;
+                }
+                yield return null;    
+            }
+        }
+        
+        IEnumerator Move(float moveSpeed) {
+            if (isGrounded && !inMotion) 
+            {
+                PlayerRun.playerVariable.moveSpeed++;            
+                transform.position += movementSpeedVector;
+                yield return null;
+            }
+
+
+
+
+        }
+
+        void Jump() {
+            // Vector3 distancePerFrame = MovementPhysics.MovementVelocity(dashX, dashY, elapsedFrames);
             if (Input.GetKeyDown(KeyCode.Space) && isGrounded && !inMotion)
             {
-
-                jumpForward = DashForward(jumpX, jumpY, elapsedFrames);
                 StopAllCoroutines();
-                StartCoroutine(jumpForward);
+                PlayerRun.playerVariable.isJump = true;
+                StartCoroutine(DashForward(jumpX, jumpY, elapsedFrames));
             }
 
+            // while(!isGrounded && !inMotion) {
+            //     //inMotion = true;
+            //     StartCoroutine(AirMotion(distancePerFrame));
+            // }
+        }
+
+        void Dash() {
             if (Input.GetKeyDown(KeyCode.F)) {
-
-                dashForward = DashForward(dashX, dashY, 30);
                 StopAllCoroutines();
-                StartCoroutine(dashForward);
-            }
-
-            StartCoroutine("RightMovement");
-
-            StartCoroutine("LeftMovement");
-
-            //if(Input.GetKeyUp(KeyCode.D) || Input.GetKeyUp(KeyCode.A))
-            //{
-            //    rgbd.velocity = new Vector3(0, 0, 0);
-            //}
-            //rgbd.velocity = new Vector3(0, rgbd.velocity.y, 0);
-        }
-
-        IEnumerator RightMovement()
-        {
-            while (Input.GetKey(KeyCode.D) && isGrounded && !inMotion)
-            {
-                if(!directionFacing) { 
-                    Flip();
-                }
-                transform.Translate(moveSpeed);
-                yield return null;
+                StartCoroutine(DashForward(dashX, dashY, 30));
             }
         }
 
-        IEnumerator LeftMovement()
-        {
-
-            while (Input.GetKey(KeyCode.A) && isGrounded && !inMotion)
-            {
-                if(directionFacing) { 
-                    Flip();
-                }
-                transform.Translate(-moveSpeed);
-                yield return null;
+        void WallJump() {
+            if(isWall && Input.GetKeyDown(KeyCode.Space)) {
+                StopAllCoroutines();
+                StartCoroutine(DashForward(2, 4, 30));
             }
         }
 
@@ -123,26 +165,49 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         {
             airMotionCounter++;
             Vector3 distancePerFrame = MovementPhysics.MovementVelocity(dashX, dashY, elapsedFrames);
-            //Vector3(1/30, 0, 0)
             for (int i = 0; i < elapsedFrames; i++)
             {        
                     isGrounded = false;
                     inMotion = true;
-                    transform.Translate(distancePerFrame);
-                    yield return null;
-                
+                    transform.position += distancePerFrame;
+                    yield return null;               
             }
 
             double x = System.Math.Round(transform.position.x, 2);
-            transform.position = new Vector3((float)x, transform.position.y, transform.position.z);
-            inMotion = false;
-            Vector3 distanceAfter = new Vector3(distancePerFrame.x + distancePerFrame.y/2, 0, 0);
+            if(dashY > 0) {
+                Vector3 distancePerFrameAfter = new Vector3(distancePerFrame.x, -distancePerFrame.y, 0f);
+                for (int i = 0; i < elapsedFrames && !isGrounded; i++)
+                {        
+                    isGrounded = false;
+                    inMotion = true;
+                    transform.position += distancePerFrameAfter;
+                    yield return null;               
+                } 
+            }
 
-            while(!isGrounded && !inMotion)
-            {
-                transform.Translate(distanceAfter);
+            if(dashY <= 0) {
+                Vector3 distancePerFrameAfter = new Vector3(distancePerFrame.x/2, gravity, 0f);
+                for (int i = 0; i < elapsedFrames && !isGrounded; i++)
+                {        
+                    isGrounded = false;
+                    inMotion = true;
+                    transform.position += distancePerFrameAfter;
+                    yield return null;               
+                }
+            }
+
+            inMotion = false;
+            PlayerRun.playerVariable.isDash = false;
+            PlayerRun.playerVariable.isJump = false;
+
+        }
+
+        IEnumerator AirMotion(Vector3 prevMotion) {
+            while(!isGrounded && !inMotion) {
+                transform.position += prevMotion;
                 yield return null;
             }
+            inMotion = false;
         }
 
         IEnumerator Gravity()
@@ -151,6 +216,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             while (!inMotion)
             {
                 transform.Translate(distancePerFrame);
+
                 yield return null;
             }
         }
@@ -161,11 +227,9 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         void RunGroundAlign() {
 
             float y =  transform.position.y;   
-            Debug.Log(y);
-            //set y = 0.16 for the first one
-            y = y - 0.105f;
-            float standardY = Mathf.RoundToInt(y/0.16f);
-            float clampPosY = (standardY * 0.16f) + 0.105f;
+            //set y = 0.16 for the first one        
+            float standardY = Mathf.RoundToInt((y-11)/16f);
+            float clampPosY = (standardY * 16f) + 11f;
 
             float posY = Mathf.Clamp(y, clampPosY, clampPosY);
 
@@ -173,11 +237,18 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             //transform.position = new Vector3(0, (float) y, 0);
         }
 
-        void Flip() {
-            transform.localScale = new Vector3(transform.localScale.x * -1, 1, 1);
-            directionFacing = !directionFacing;
-            jumpX *= -1;
-            dashX *= -1;
+        void Flip(bool direction) {
+            float x = Mathf.Abs(transform.localScale.x);
+            jumpX = Mathf.Abs(jumpX);
+            dashX = Mathf.Abs(dashX);
+            
+            if(direction) {
+                transform.localScale = new Vector3(x, 1, 1);
+            } else {
+                transform.localScale = new Vector3(-x, 1, 1);
+                jumpX *= -1;
+                dashX *= -1;
+            }
         }
     }
 }

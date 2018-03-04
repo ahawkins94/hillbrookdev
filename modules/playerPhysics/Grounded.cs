@@ -8,7 +8,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
     {
         Rigidbody2D rgbd;
         GameObject player;
-
         Vector3 groundedContact;
         Vector3 playerPosition;
 
@@ -30,7 +29,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             if (col.gameObject.tag == "Ground")
             {
                 Vector3 position = player.transform.position;
-                // Debug.Log("Bounds: " + position);
                 PlayerRun.playerVariable.isGrounded = true;
                 PlayerRun.playerVariable.airMotionCounter = 0;
             }
@@ -59,7 +57,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         void OnCollisionEnter2D(Collision2D col) {
             var contacts = col.contacts;
             groundedContact = contacts[0].point;
-            Debug.Log("Grounded contact: " + groundedContact);
         }
     }
 }

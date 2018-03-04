@@ -24,8 +24,8 @@ public class CameraFollow : MonoBehaviour {
 	
 	void Update()
 	{
-		float posX  = Mathf.Clamp(player.transform.position.x, 1.95f, 9999.99f);
-		transform.position = new Vector3(posX, 0.67f, transform.position.z);
+		float posX  = Mathf.Clamp(player.transform.position.x, 104f, 9999.99f);
+		transform.position = new Vector3(posX, 80f, transform.position.z);
 	}
 
 	// float posX = Mathf.SmoothDamp (transform.position.x, player.transform.position.x, ref velocity.x, smoothTimeX);

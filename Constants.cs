@@ -8,7 +8,7 @@ namespace Assets.Scripts.hillbrookdev
     public class Constants
     {
 
-        public const float STANDARD_UNIT = 0.16f;
+        public const float STANDARD_UNIT = 16f;
         
 
 

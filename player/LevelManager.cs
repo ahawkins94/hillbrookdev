@@ -8,22 +8,22 @@ public class LevelManager : MonoBehaviour {
     public Vector3 currentCheckpoint;
 
     //Use this for initialization
-    void Start() {
+    void Awake() {
         playerPosition = new Vector3(transform.position.x, transform.position.y, transform.position.z);
-        currentCheckpoint = new Vector3(0.16f, 0.5f, 20f);
+        currentCheckpoint = playerPosition;
     }
 
     void OnCollisionEnter2D(Collision2D other) {
         //Debug.Log(other.tag);
         if (other.gameObject.tag == "Killzone") {
-            Debug.Log("collided");
+            // Debug.Log("collided");
             RespawnPlayer();
         }
     }
 
     public void RespawnPlayer() {
 
-        Debug.Log("Player Respawn");
+        // Debug.Log("Player Respawn");
         transform.position = currentCheckpoint;
 
      }
