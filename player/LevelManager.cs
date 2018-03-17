@@ -24,6 +24,7 @@ public class LevelManager : MonoBehaviour {
     public void RespawnPlayer() {
 
         // Debug.Log("Player Respawn");
+        StopAllCoroutines();
         transform.position = currentCheckpoint;
 
      }

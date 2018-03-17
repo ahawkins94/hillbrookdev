@@ -1,0 +1,64 @@
+breakdown of each area:
+
+player 
+    - playermanager
+    - playerphysics
+        - moveX
+        - moveY
+        - move by integers so I move pixel by pixel as it is 1 unit is 1 pixel
+        
+        - AABB bound when colliding with a wall and ground
+            - use colliders to detect collision then run the function to compare the objects
+            - create the struct AABB(Vector2 center, Vector2 halfSize) {
+            - then compare the centre and halfSize of the objects
+            - at the end of the update when you move the player run - if(xCollide true) x = 0; if(yCollide true) y = 0; 
+        
+        - move the player at the end of the update function - calculate the distance travelled at the end
+            - each coroutine adds to the current translation and then apply it at the end of the frame LastUpdate();
+                - always add the remainder of the frame to a running total and apply the int rounded down
+            - calculate speed of distance travelled per frame or the totalled current velocity for that frame
+            - apply gravity as a constant of 8
+        
+        World
+        - gravity
+        - standard unit
+
+        Physics
+        - create MoveX() and MoveY() methods to transform objects - standard unit = block size / 16
+        - create motion equations (?)
+
+        PlayerMovement
+        - velocity
+        - (?)inf acceleration and max speed (cap at end of the frame)
+
+        - Dash(x, y, f)
+        - Jump(h, f)
+        - Store these moves as arrays
+
+        - create coroutine for each move - dash, jump, swing
+        - move left and right
+
+        - player box collider round his exact body - supporting colliders for wall detection and ground detection (2pixel deep (?))
+        - ground check - front check (walljump and wall detection)
+        - detects early, rounds back up to the integer and then applies a bound of the player offset pixels
+        - add all of the movement of each frame up together and calculate velocity the whole time and then apply at the end of the frame
+
+        - always move in pixels (integers)
+            - sum the distance translated each frame
+            - everytime goes above 1 translate by 1
+            - minus integer transform from the remainder 
+            - repeat
+
+        - jump coroutine (height, time to reach max height) only applies on the y axis - x carries overs
+            - height(t) = initial velocity * t + 1/2 * gravity * t^2
+            - calculate height(t) record the previous frame and work out difference and apply the difference to the character
+
+        - wall jump    
+            - detect wall - bounded by the wall
+            - can only jump when player.pos - wall.pos < 4 
+            - active wall jump coroutine (like jump)
+
+        -     
+
+
+        - 

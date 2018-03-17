@@ -10,12 +10,14 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         GameObject player;
         Vector3 groundedContact;
         Vector3 playerPosition;
+        public GameObject weaponObject;
+        public BoxCollider2D weapon; 
 
         void Start()
         {
             rgbd = GetComponent<Rigidbody2D>();
             rgbd.isKinematic = true;
-            player = GameObject.FindWithTag("Player");
+            player = transform.parent.gameObject;
         }
 
         /*
@@ -31,6 +33,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
                 Vector3 position = player.transform.position;
                 PlayerRun.playerVariable.isGrounded = true;
                 PlayerRun.playerVariable.airMotionCounter = 0;
+                RunGroundAlign();
+
             }
         }
 
@@ -58,5 +62,19 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             var contacts = col.contacts;
             groundedContact = contacts[0].point;
         }
+
+        void RunGroundAlign() {
+
+            float y =  player.transform.position.y;   
+            //set y = 0.16 for the first one        
+            float standardY = Mathf.RoundToInt((y-11)/16f);
+            float clampPosY = (standardY * 16f) + 11f;
+
+            float posY = Mathf.Clamp(y, clampPosY, clampPosY);
+
+            transform.parent.transform.position = new Vector3(transform.position.x, posY, transform.position.z);
+            //transform.position = new Vector3(0, (float) y, 0);
+        }
+
     }
 }

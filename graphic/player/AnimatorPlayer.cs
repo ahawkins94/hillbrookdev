@@ -6,6 +6,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 {
 public class AnimatorPlayer : MonoBehaviour {
 
+	public bool isIdle = true;
 	public bool isGrounded = false;
 	public bool isJump = false;
 
@@ -30,6 +31,7 @@ public class AnimatorPlayer : MonoBehaviour {
 	}
 
 	void Update () {
+		isIdle = PlayerRun.playerVariable.isIdle;
 		isGrounded = PlayerRun.playerVariable.isGrounded;
 		moveSpeed = PlayerRun.playerVariable.moveSpeed;
 		isDash = PlayerRun.playerVariable.isDash;
@@ -44,6 +46,7 @@ public class AnimatorPlayer : MonoBehaviour {
 		animator.SetBool("isDash", isDash);
 		animator.SetBool("isSwing", isSwing);
 		animator.SetBool("isJump", isJump);
+		animator.SetBool("isIdle", isIdle);
 	}
 
 	}
