@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+using Assets.Scripts.hillbrookdev.functions;
+
 namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 {
     public class Grounded : MonoBehaviour
@@ -13,11 +15,17 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         public GameObject weaponObject;
         public BoxCollider2D weapon; 
 
+        BoxCollider2D playerBox;
+
+        AABB playerAABB;
+
         void Start()
         {
             rgbd = GetComponent<Rigidbody2D>();
             rgbd.isKinematic = true;
             player = transform.parent.gameObject;
+            playerBox = player.GetComponent<BoxCollider2D>();
+            playerAABB = new AABB(playerBox);
         }
 
         /*
@@ -33,7 +41,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
                 Vector3 position = player.transform.position;
                 PlayerRun.playerVariable.isGrounded = true;
                 PlayerRun.playerVariable.airMotionCounter = 0;
-                RunGroundAlign();
 
             }
         }
@@ -43,6 +50,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
         {
             if (col.gameObject.tag == "Ground")
             {
+                // When the colliders have crossed run  
                 PlayerRun.playerVariable.isGrounded = true;
                 //player.transform.position = new Vector3(player.transform.position.x, playerPosition.y, 0);
 
@@ -58,11 +66,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             }
         }
 
-        void OnCollisionEnter2D(Collision2D col) {
-            var contacts = col.contacts;
-            groundedContact = contacts[0].point;
-        }
-
         void RunGroundAlign() {
 
             float y =  player.transform.position.y;   
@@ -75,6 +78,12 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             transform.parent.transform.position = new Vector3(transform.position.x, posY, transform.position.z);
             //transform.position = new Vector3(0, (float) y, 0);
         }
+
+
+
+
+        
+
 
     }
 }
