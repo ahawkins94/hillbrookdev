@@ -167,9 +167,9 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			MovementPhysics.MoveX(moveX, this.transform);
 			MovementPhysics.MoveY(moveY, this.transform);
 
-			if(pos.y < playerBoundsMin.y + playerAABB.halfSize.y) {
-				transform.position = new Vector2(pos.x, -1 * (playerBoundsMin.y));
-			}
+			// if(pos.y < playerBoundsMin.y + playerAABB.halfSize.y) {
+			// 	transform.position = new Vector2(pos.x, -1 * (playerBoundsMin.y));
+			// }
 
 
 		}
