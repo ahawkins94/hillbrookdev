@@ -53,5 +53,9 @@ namespace Assets.Scripts.hillbrookdev.functions
                 transform.localScale = new Vector3(-x, 1, 1);
             }
         }
+
+        public static void WallJump(bool direction, Transform transform) {
+            
+        }
     }
 }

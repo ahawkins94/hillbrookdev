@@ -15,7 +15,8 @@ namespace Assets.Scripts.hillbrookdev.functions
         public Vector2 halfSize;
 
         public AABB(BoxCollider2D col) {
-
+            
+            
             center = new Vector2(col.transform.position.x, col.transform.position.y);
 
             Vector2 size = col.size;

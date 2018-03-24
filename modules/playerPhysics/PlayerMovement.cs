@@ -304,13 +304,13 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             // Debug.Log("edgePosY:" + edgePosY);
 
             // Length in each direction
+			// Cut line based on collision point
             float lineLenY = directionY * lineLengthY;
             float lineLenX = directionX * lineLengthX;
 
 			// Debug.Log("Y:" + lineLenY + ", X:" + lineLenX);
-
-
             // Run through array creating all vertical lines
+			// Host variable for number of lines and create array from that length
             for (int i = 0; i < linesYStart.Length; i++) {
 
 				// Set starting position of x which will set 5 lines 
@@ -339,8 +339,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 
 			for(int i = 0; i < linesXStart.Length; i++) {
-
-
 
 				float lineXPosY = playerAABB.center.y + playerAABB.halfSize.y - (1 + i*2);
 
