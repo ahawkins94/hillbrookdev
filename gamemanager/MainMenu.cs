@@ -48,7 +48,7 @@ public class MainMenu : MonoBehaviour {
 
     public void LoadMainGameMobileControls()
     {
-        SceneManager.LoadScene("MainGameMobileControls");
+        SceneManager.LoadScene("Version 0.1");
     }
 
     public void LoadMainGameUnityControls()
