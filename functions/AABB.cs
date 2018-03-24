@@ -16,7 +16,7 @@ namespace Assets.Scripts.hillbrookdev.functions
 
         public AABB(BoxCollider2D col) {
 
-            center = new Vector2(col.transform.position.x + col.offset.x, col.transform.position.y + col.offset.y);
+            center = new Vector2(col.transform.position.x, col.transform.position.y);
 
             Vector2 size = col.size;
 
@@ -25,7 +25,9 @@ namespace Assets.Scripts.hillbrookdev.functions
         }
 
         public void SetCenter(BoxCollider2D col, float directionX, float directionY) {
-            this.center = new Vector2(col.transform.position.x + directionX * col.offset.x, col.transform.position.y + col.offset.y * directionY);
+
+            // This takes the position of the box colider
+            this.center = new Vector2(col.transform.position.x + col.offset.x * directionX , col.transform.position.y + col.offset.y * directionY);
         }
 
 

@@ -52,7 +52,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 		RaycastHit2D[] linesXStart = new RaycastHit2D[8];
 		RaycastHit2D[] linesYStart = new RaycastHit2D[5];
 
-		Vector2 lineLength;
+        public float lineLengthY = 8f;
+        public float lineLengthX = 8f;
 
 		public Vector2 directionOriginOffsset;
 
@@ -134,7 +135,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			}
 		}
 
-		//
 		void Gravity() {
 			if(!inMotion && !isGrounded) {
 				velocity += Vector2.up * gravity;
@@ -147,7 +147,6 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 			Vector2 nextPosition = new Vector2(playerAABB.center.x + moveX, playerAABB.center.y + moveY);
 		
-			// Calculate remainder of velocity as we only move by integers
 
 			if(collideRight) {
 				if(nextPosition.x > playerBoundsMax.x) {
@@ -161,21 +160,28 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 				}
 			}	
 			
+            // When colliding with the floor if the distance is over the bound
+            // Then clamp on the y axis at the block level
 			if(collideDown) {
-				if(nextPosition.y < playerBoundsMin.y) {
+				if(nextPosition.y <= playerBoundsMin.y) {
 					moveY = 0;
 				}
 			}
+
 
 			if(collideUp) {
 				if(nextPosition.y > playerBoundsMax.y) {
 					moveY = 0;
 				}
 			}
-		
-			MovementRemainder();
-			MovementPhysics.MoveX(moveX, this.transform);
-			MovementPhysics.MoveY(moveY, this.transform);
+
+            // Calculate remainder of velocity as we only move by integers
+            MovementRemainder();
+
+            // Always do Y first to avoid error
+            MovementPhysics.MoveY(moveY, this.transform);
+            MovementPhysics.MoveX(moveX, this.transform);
+			
 
 
 		}
@@ -254,39 +260,58 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			bool hitY = false;
 
 			// Set direction of velocity
+            // X > 0 RIGHT
+            // X < 0 LEFT
 			if(previousVelocity.x != 0) {	
 				directionX = previousVelocity.x/Mathf.Abs(previousVelocity.x);
 			}
+
+            // Y < 0 DOWN
+            // Y > 0 UP
 			if(previousVelocity.y != 0) {
 				directionY = previousVelocity.y/Mathf.Abs(previousVelocity.y);
 			}
 
+            // AABB ( Centre in world space, halfSize ) 
+            // This is intended to take into consideration direction 
+            // As the offset flips position
+            // Offset = -2, Right = Center + Offset; Left = Center - Offset; 
 			playerAABB.SetCenter(box, directionX, directionY);
-			Debug.Log(playerAABB.center);
 
-			// Take edge position x, y 
-			//Find the side of the box collider: player position + offset + halfSize based on the direction facing
+
+			//Debug.Log("Center:" + playerAABB.center);
+            //Debug.Log("Halfsize:" + playerAABB.halfSize);
+
+            // Take edge position x, y 
+            // Find the side of the box collider: 
+            // player position + offset + halfSize based on the direction facing
 			float edgePosX = playerAABB.center.x + playerAABB.halfSize.x * directionX;
 			float edgePosY = playerAABB.center.y + playerAABB.halfSize.y * directionY;
 
-			// Length in each direction
-			lineLength = new Vector2(directionX * 8, directionY * 8);
 
-			
+            Debug.Log("edgePosX:" + edgePosX);
+            Debug.Log("edgePosY:" + edgePosY);
 
-		
-	
-			// Run through array creating all vertical lines
-			for(int i = 0; i < linesYStart.Length; i++) {
+            // Length in each direction
+            float lineLenY = directionY * lineLengthY;
+            float lineLenX = directionX * lineLengthX;
 
-				// Set starting position of x and y
+
+            // Run through array creating all vertical lines
+            for (int i = 0; i < linesYStart.Length; i++) {
+
+				// Set starting position of x which will set 5 lines 
 				float lineYPosX = playerAABB.center.x + playerAABB.halfSize.x - (1 + i*2);
 
-				// Draw line from start to finish
-				Vector2 floorYLineStart = new Vector2(lineYPosX, edgePosY);
-				Vector2 floorYLineEnd = new Vector2(lineYPosX, edgePosY + lineLength.y);
-				Debug.DrawLine(floorYLineStart, floorYLineEnd, Color.red, Time.deltaTime);
-				linesYStart[i] = Physics2D.Linecast(floorYLineStart, floorYLineEnd, 1 << LayerMask.NameToLayer("World"));
+                // Draw line from start to finish
+                Vector2 floorYLineStart = new Vector2(lineYPosX, edgePosY);
+
+
+                Vector2 floorYLineEnd = new Vector2(lineYPosX, edgePosY + lineLenY);
+
+                Debug.DrawLine(floorYLineStart, floorYLineEnd, Color.red, Time.deltaTime);
+
+                linesYStart[i] = Physics2D.Linecast(floorYLineStart, floorYLineEnd, 1 << LayerMask.NameToLayer("World"));
 
 				// Check to see if collision occured
 				if(linesYStart[i].collider != null) {				
@@ -304,11 +329,17 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 			for(int i = 0; i < linesXStart.Length; i++) {
 
+
+
 				float lineXPosY = playerAABB.center.y + playerAABB.halfSize.y - (1 + i*2);
-				Vector2 floorXLineStart = new Vector2(edgePosX, lineXPosY);
-				Vector2 floorXLineEnd = new Vector2(edgePosX + lineLength.x, lineXPosY);
-				Debug.DrawLine(floorXLineStart, floorXLineEnd, Color.red, Time.deltaTime);
-				linesXStart[i] = Physics2D.Linecast(floorXLineStart, floorXLineEnd, 1 << LayerMask.NameToLayer("World"));
+
+                Vector2 floorXLineStart = new Vector2(edgePosX, lineXPosY);
+
+                Vector2 floorXLineEnd = new Vector2(edgePosX + lineLengthX, lineXPosY);
+
+                Debug.DrawLine(floorXLineStart, floorXLineEnd, Color.red, Time.deltaTime);
+
+                linesXStart[i] = Physics2D.Linecast(floorXLineStart, floorXLineEnd, 1 << LayerMask.NameToLayer("World"));
 
 				// Check to see if collision occured
 				if(linesXStart[i].collider != null) {				
@@ -336,6 +367,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 			isGrounded = collideDown;
 		}
+
+
 		void CheckCollisionX(AABB box1, AABB box2) {
 
 			// Set difference in position and total halfSize
@@ -353,7 +386,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 				if(directionX > 0) {
 
 					// Debug.Log("Collide Right X");
-					lineLength.x = Mathf.Abs((box2.center.x + box2.halfSize.x) - (box1.center.x + box1.halfSize.x)); 
+					lineLengthX = Mathf.Abs((box2.center.x + box2.halfSize.x) - (box1.center.x + box1.halfSize.x)); 
 					playerBoundsMax.x = box2.center.x - totalSizeX - box.offset.x;
 					if(absPosDeltaX <= totalSizeX) {
 					  	collideRight = true;
@@ -367,7 +400,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 				if(directionX < 0)
 				{
 					// Debug.Log("Collide Left X");
-					lineLength.x = -Mathf.Abs((box2.center.x + box2.halfSize.x) - (box1.center.x + box1.halfSize.x)); 
+					lineLengthX = -Mathf.Abs((box2.center.x + box2.halfSize.x) - (box1.center.x + box1.halfSize.x)); 
 					playerBoundsMin.x = box2.center.x + totalSizeX + box.offset.x;
 					if(absPosDeltaX <= totalSizeX) {
 						collideLeft = true;
@@ -394,7 +427,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 
 			if(directionY >= 1) {
-				lineLength.y = Mathf.Abs((box2.center.y + box2.halfSize.y) - (box1.center.y + box1.halfSize.y)); 
+				lineLengthY = Mathf.Abs((box2.center.y + box2.halfSize.y) - (box1.center.y + box1.halfSize.y)); 
 				playerBoundsMax.y = box2.center.y - totalSizeY - box.offset.y;
 
 			// If the distance between the two boxes is less than the total half size length then the boyes have collided
@@ -410,7 +443,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 				
 
 			if(directionY <= 1) {
-				lineLength.y = -Mathf.Abs((box2.center.y + box2.halfSize.y) - (box1.center.y + box1.halfSize.y)); 
+				lineLengthY = -Mathf.Abs((box2.center.y + box2.halfSize.y) - (box1.center.y + box1.halfSize.y)); 
 				playerBoundsMin.y = box2.center.y + totalSizeY + box.offset.y;
 
 				if(absPosDeltaY <= totalSizeY) {
