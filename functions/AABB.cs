@@ -27,7 +27,7 @@ namespace Assets.Scripts.hillbrookdev.functions
         public void SetCenter(BoxCollider2D col, float directionX, float directionY) {
 
             // This takes the position of the box colider
-            this.center = new Vector2(col.transform.position.x + col.offset.x * directionX , col.transform.position.y + col.offset.y * directionY);
+            this.center = new Vector2(col.transform.position.x + col.offset.x * directionX , col.transform.position.y + col.offset.y);
         }
 
 
