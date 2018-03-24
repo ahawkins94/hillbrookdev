@@ -89,7 +89,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
             } else {
                 PlayerRun.playerVariable.isLeftWall = true;
-                transform.parent.transform.Find("BodyCollider").GetComponent<BoxCollider2D>().bounds.SetMinMax(position, new Vector3(0f, 0f, 0f)); 
+                //transform.parent.transform.Find("BodyCollider").GetComponent<BoxCollider2D>().bounds.SetMinMax(position, new Vector3(0f, 0f, 0f)); 
 
             }
             

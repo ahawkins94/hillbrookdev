@@ -32,11 +32,9 @@ public class Attacked : MonoBehaviour {
 	
 	void OnTriggerEnter2D(Collider2D col)
     {
-			Debug.Log("In");
 			enemy = FindClosestEnemy();
             if (col.gameObject.tag == "Enemies")
             {	
-				Debug.Log("Dead");
                 Destroy(enemy);
             }
     }
@@ -67,7 +65,6 @@ public class Attacked : MonoBehaviour {
 		var currentSmallestDistance = 10000f;
 		foreach(GameObject e in enemies) {
 		 	var distance = Vector3.Distance(e.transform.position, player.transform.position);
-			 Debug.Log(distance);
 		 	if(distance < currentSmallestDistance) {
 		 		currentSmallestDistance = distance;
 		 		enemy = e;

@@ -12,6 +12,7 @@ public class AnimatorPlayer : MonoBehaviour {
 
 	public bool isSwing = false;
 
+	public bool isRunning = false;
 	public int moveSpeed = 0;
 
 	bool isDash = false;

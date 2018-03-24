@@ -41,6 +41,10 @@ namespace Assets.Scripts.hillbrookdev.functions
             return height;
         }
 
+        public static float JumpGravity(float jumpHeight, float jumpDuration) {
+            return (-2 * jumpHeight) / (jumpDuration * jumpDuration);
+        }
+
         public static void Flip(bool direction, Transform transform) {
             float x = Mathf.Abs(transform.localScale.x);
             if(direction) {
