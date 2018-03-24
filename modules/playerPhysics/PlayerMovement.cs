@@ -165,8 +165,9 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             // When colliding with the floor if the distance is over the bound
             // Then clamp on the y axis at the block level
 			if(nextPosition.y < playerBoundsMin.y) {
+				Debug.Log(nextPosition.y < playerBoundsMin.y);
 				Vector2 posB = box.transform.position;
-				pos.y = playerBoundsMin.y;
+				posB.y = playerBoundsMin.y;
 				moveY = 0;
 			}
 
