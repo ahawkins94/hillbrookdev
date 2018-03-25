@@ -56,5 +56,9 @@ namespace Assets.Scripts.hillbrookdev.functions
                 // transform.position = new Vector3(pos.x + (2 * offset), pos.y, pos.z);
             }
         }
+
+        public static void WallJump(bool direction, Transform transform) {
+            
+        }
     }
 }

@@ -127,13 +127,14 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 			// Movement
 			Walking();		
-			// Dashing(); 
+			Dashing(); 
 			Jumping();		
+
+			Gravity();
 
 			// Calculate line cast
 			LineCast();
 
-			Gravity();
 
 			
 		
@@ -237,12 +238,13 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 			if(collideDown) {
 
-				if(nextPosition.y <= playerBoundsMin.y) { 
+				if(nextPosition.y <= playerBoundsMin.y) {
+					Debug.Break(); 
 					float boxOffsetClamp = box.offset.x * directionX;
 					movementRemainder.y = 0;
 					moveY = 0;
 				}
-			} else { playerBoundsMin.y = 0; }
+			} 
 		
 		// if(collideDown) {
 			// 	moveY = 0;
@@ -300,7 +302,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 		void AlignCharacter(Vector2 nextPosition) {
 			Vector3 playerPos = transform.position;
 
-			if(directionY == -1 && collideDown) {
+			if(directionY == -1 && collideDown && playerBoundsMin.y != 0) {
 				if(playerAABB.center.y < playerBoundsMin.y) {
 
 					
@@ -400,10 +402,12 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 		void Dashing() {
 			if(Input.GetKeyDown(KeyCode.K) && !inMotion) {
 
+				isDashing = true;
+                inMotion = true;
 				StopAllCoroutines();
 				dashing = Dash(dash);
 				StartCoroutine(dashing);
-				isDashing = true;
+				
 
 			}
 		}
@@ -412,8 +416,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			Vector2 distancePerFrame = MovementPhysics.Velocity(dash[0], dash[1], dash[2]);
             for (int i = 0; i < dash[2]; i++)
             {        
-                    isGrounded = false;
-                    inMotion = true;
+                    Debug.Log(distancePerFrame);
                     velocity += distancePerFrame;
                     yield return null;               
             }
@@ -503,6 +506,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
             // Debug.Log("edgePosY:" + edgePosY);
 
             // Length in each direction
+			// Cut line based on collision point
             float lineLenY = directionY * lineLengthY;
             float lineLenX = directionX * lineLengthX;
 
@@ -515,7 +519,9 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			// 	indentY = 3;
 			// }
 
+			// Debug.Log("Y:" + lineLenY + ", X:" + lineLenX);
             // Run through array creating all vertical lines
+			// Host variable for number of lines and create array from that length
             for (int i = 0; i < linesYStart.Length; i++) {
 
 				// Set starting position of x which will set 5 lines 
