@@ -8,7 +8,7 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     GameObject backgroundList;
 
-    Vector3 playerPosition = new Vector3(16f, 32f, 8);
+    Vector3 playerPosition = new Vector3(250f, 32f, 8);
     Vector3 startBackgroundPosition = new Vector3(60f, 24f, 100f);
 
     Vector3 currentBackgroundPosition = new Vector3(0f, 23f, 100f);
