@@ -28,8 +28,6 @@ public class PathBlueprint
             "stone_flat2_15" 
             };
 
-
-
         int standardBlockListRange = standardBlockList.Length;
         randomStandardBlock = standardBlockList[Random.Range(0, standardBlockListRange)];
     }   
