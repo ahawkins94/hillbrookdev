@@ -27,6 +27,8 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 		public float gravity = -0.2f;
 
+		float gravityStartX = 0;
+
 		Vector2 gravityVector;
 		
 		public bool inMotion;
@@ -157,7 +159,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 							if(collideLeft) {
 								moveX -= 4;
 								flipped = true;
-								Debug.Break();
+								// Debug.Break();
 							} else {
 								flipped = false;
 							}
@@ -172,7 +174,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 						if(directionX == 1) {
 							MovementPhysics.Flip(directionX, box.offset.x, transform);
 
-							Debug.Log("r" + collideRight);
+							// Debug.Log("r" + collideRight);
 							if(collideRight) {
 								flipped = true;
 								moveX += 4;
@@ -200,19 +202,21 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 
 		void Gravity() {
 			if(!inMotion && !isGrounded && !collideDown && !isFreeFalling) {
+				gravityStartX = previousVelocity.x;
 				StopAllCoroutines();
 				// isFreeFalling = true;
 				// falling = FreeFall();
 				// StartCoroutine(falling);
 				velocity += Vector2.up * gravity;
+				velocity += Vector2.right * gravityStartX;
 			}
+
+			gravityStartX = 0; 
 		}
 
 
 		// Any player movement is done in this update function
 		void LateUpdate() {
-
-			
 
 			// Add the previous frames movementRemainder (this should always be less than one)
 			if(Mathf.Abs(movementRemainder.x) >= 1) {
@@ -239,7 +243,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			if(collideDown) {
 
 				if(nextPosition.y <= playerBoundsMin.y) {
-					Debug.Break(); 
+					// Debug.Break(); 
 					float boxOffsetClamp = box.offset.x * directionX;
 					movementRemainder.y = 0;
 					moveY = 0;

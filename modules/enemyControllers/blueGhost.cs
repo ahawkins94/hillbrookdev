@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Assets.Scripts.hillbrookdev.functions;
 
-public class blueGhost : MonoBehaviour {
+public class BlueGhost : MonoBehaviour {
 
 	LevelManager levelManager;
 	GameObject player;
