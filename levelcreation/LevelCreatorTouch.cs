@@ -32,6 +32,8 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     string randomStandardBlock;
 
+    string location;
+
     Vector3[] childTransforms;
 
     int[] backgroundPrefabHeights = {0, 22, 31, 35, 90, 58, 109, 125, 89};
@@ -128,6 +130,8 @@ public class LevelCreatorTouch : MonoBehaviour {
         for(int i = 0; i < 5; i++){
             
             PathBlueprint.standardLevelBlocks(ref randomStandardBlock);
+            PathBlueprint.main(ref location);
+
             Vector3 nextLevelBlockPosition = new Vector3((previousLevelBlockHalfLength) + previousLevelBlockCenter.x + nextLevelBlockHalfLength, previousLevelBlockCenter.y, 20);
             nextLevelBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/Build/"+randomStandardBlock), nextLevelBlockPosition, Quaternion.identity) as GameObject;
             nextLevelBlockHalfLength = nextLevelBlock.GetComponent<Renderer>().bounds.size.x / 2;
