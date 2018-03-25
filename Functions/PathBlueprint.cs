@@ -10,20 +10,26 @@ public class PathBlueprint : MonoBehaviour
     int[] array = new int[3];
 
 
-    void scrapeLevelBlocks(string location) {
+    public static void main(ref string location) {
+        LevelVariables[] levelVariables = scrapeLevelBlocks(location);
+    }
+    private static LevelVariables[] scrapeLevelBlocks(string location) {
         // Loads all of the game objects in the levelblocks folder into an array
         Object[] levelBlocks = Resources.LoadAll("Prefabs/LevelBlocks", typeof(GameObject));
 
         // Creates an array of the variables in the array
         LevelVariables[] levelBlockVarList = new LevelVariables[levelBlocks.Length];
+
         for (int i = 0; i < levelBlocks.Length; i++) {
 
             GameObject current = (GameObject) Instantiate(levelBlocks[i], new Vector3(0, 0, 0), Quaternion.identity);
 
-            // levelBlockVarList[i] = levelBlocks[i]
+            levelBlockVarList[i] = current.GetComponent<LevelVariables>();
 
             Destroy(current);
         }
+
+        return levelBlockVarList;
     }
 
     // contains an array of the level blocks names and randomly chooses one of them when ran 
