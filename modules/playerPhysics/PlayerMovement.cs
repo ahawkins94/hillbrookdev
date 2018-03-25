@@ -157,7 +157,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 							if(collideLeft) {
 								moveX -= 4;
 								flipped = true;
-								Debug.Break();
+								// Debug.Break();
 							} else {
 								flipped = false;
 							}
@@ -239,7 +239,7 @@ namespace Assets.Scripts.hillbrookdev.modules.playerPhysics
 			if(collideDown) {
 
 				if(nextPosition.y <= playerBoundsMin.y) {
-					Debug.Break(); 
+					// Debug.Break(); 
 					float boxOffsetClamp = box.offset.x * directionX;
 					movementRemainder.y = 0;
 					moveY = 0;
