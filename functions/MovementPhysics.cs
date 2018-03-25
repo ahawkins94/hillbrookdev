@@ -45,13 +45,20 @@ namespace Assets.Scripts.hillbrookdev.functions
             return (-2 * jumpHeight) / (jumpDuration * jumpDuration);
         }
 
-        public static void Flip(bool direction, Transform transform) {
+        public static void Flip(float direction, float offset, Transform transform) {
             float x = Mathf.Abs(transform.localScale.x);
-            if(direction) {
-                transform.localScale = new Vector3(x, 1, 1);
-            } else {
+            Vector3 pos = transform.position;
+            if(direction == 1) {
                 transform.localScale = new Vector3(-x, 1, 1);
+                // transform.position = new Vector3(pos.x + (2 * -offset), pos.y, pos.z);    
+            } if(direction == -1) {
+                transform.localScale = new Vector3(x, 1, 1);
+                // transform.position = new Vector3(pos.x + (2 * offset), pos.y, pos.z);
             }
+        }
+
+        public static void WallJump(bool direction, Transform transform) {
+            
         }
     }
 }
