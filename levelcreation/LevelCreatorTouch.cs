@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Assets.Scripts.hillbrookdev.functions;
 
 public class LevelCreatorTouch : MonoBehaviour {
 
@@ -8,7 +9,7 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     GameObject backgroundList;
 
-    Vector3 playerPosition = new Vector3(16f, 32f, 8);
+    Vector3 playerPosition = new Vector3(250f, 32f, 8);
     Vector3 startBackgroundPosition = new Vector3(60f, 24f, 100f);
 
     Vector3 currentBackgroundPosition = new Vector3(0f, 23f, 100f);
@@ -21,8 +22,15 @@ public class LevelCreatorTouch : MonoBehaviour {
     GameObject background;
     GameObject terrain;
     GameObject terrainPiece;
+    GameObject startBlock;
+
+    GameObject nextLevelBlock;
 
     public float cameraDistance = 10;
+
+    public string startBlockName = "stone_flat1_15";
+
+    string randomStandardBlock;
 
     Vector3[] childTransforms;
 
@@ -44,12 +52,14 @@ public class LevelCreatorTouch : MonoBehaviour {
         GameObject player = Instantiate(Resources.Load("Prefabs/Player/PlayerViking"), playerPosition, Quaternion.identity) as GameObject;
         //background = Instantiate(Resources.Load("Prefabs/Background/Background_Sun"), startBackgroundPosition, Quaternion.identity) as GameObject;
         //background.transform.parent = backgroundList.transform;
-        GameObject startBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/Build/stone_flat1_15"), levelPosition, Quaternion.identity) as GameObject;
         GameObject camera = Instantiate(Resources.Load("Prefabs/Player/Camera"), cameraPosition, Quaternion.identity) as GameObject;
+        // camera.GetComponent<Camera>().orthographicSize = 500;
         GameObject pitfall = Instantiate(Resources.Load("Prefabs/LevelBlocks/Pitfall"), pitfallZone, Quaternion.identity) as GameObject;
-        GameObject ghostBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/stone_flat_14_ghost"), new Vector3(levelPosition.x + 240f, levelPosition.y, levelPosition.z), Quaternion.identity) as GameObject;
+        // GameObject ghostBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/stone_flat_14_ghost"), new Vector3(levelPosition.x + 240f, levelPosition.y, levelPosition.z), Quaternion.identity) as GameObject;
 
         BuildBackgroundPiece();
+        BuildStartLevel(startBlockName);
+        GenerateLevel();
         //GameObject block = Instantiate(Resources.Load("Prefabs/LevelBlocks/Build/stone_1"), levelPosition, Quaternion.identity) as GameObject;
 
 
@@ -75,7 +85,6 @@ public class LevelCreatorTouch : MonoBehaviour {
 
     GameObject BuildBackgroundPiece() {
         background = new GameObject("Background");
-
         for(int i = 0; i < backgroundPrefabNames.Length; i++) {
             terrain = new GameObject(backgroundPrefabNames[i]);
             Vector3 terrainPos = new Vector3(0, backgroundPrefabHeights[i], i);
@@ -99,6 +108,38 @@ public class LevelCreatorTouch : MonoBehaviour {
 
         return background;
     }
+
+    // Spawn start of level
+    void BuildStartLevel(string startBlockName) {
+        startBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/Build/"+startBlockName), levelPosition, Quaternion.identity) as GameObject;
+    }
+
+    // Instantiate the level
+    void GenerateLevel() {
+        // call a method PathBluePrint() to find out the array of string name which refer to the location of the level block prefabs
+
+        float previousLevelBlockHalfLength = startBlock.GetComponent<Renderer>().bounds.size.x /2;
+        Vector2 previousLevelBlockCenter = startBlock.transform.position;
+        float nextLevelBlockHalfLength = 0;
+
+        // Vector2 previous level block position 
+        // Vector2 current level block position = new Vector2(previous.position.x + previous.halfSize.x + current.halfSize.x, previous.y, 20);
+
+        for(int i = 0; i < 5; i++){
+            
+            PathBlueprint.standardLevelBlocks(ref randomStandardBlock);
+            Vector3 nextLevelBlockPosition = new Vector3((previousLevelBlockHalfLength) + previousLevelBlockCenter.x + nextLevelBlockHalfLength, previousLevelBlockCenter.y, 20);
+            nextLevelBlock = Instantiate(Resources.Load("Prefabs/LevelBlocks/Build/"+randomStandardBlock), nextLevelBlockPosition, Quaternion.identity) as GameObject;
+            nextLevelBlockHalfLength = nextLevelBlock.GetComponent<Renderer>().bounds.size.x / 2;
+            previousLevelBlockHalfLength = nextLevelBlockHalfLength;
+            previousLevelBlockCenter = nextLevelBlockPosition;
+
+        }
+        // to stick the piece accurately together we need to have: startHeight, endHeight, levelBlockLength, 
+        // in this method we are setting the levelBlockCenter
+    }
+
+
 
     void transormRelativeOrigin(BoxCollider2D col) {
         float minY = col.bounds.min.y;
